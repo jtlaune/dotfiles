@@ -16,7 +16,7 @@
   :ensure t)
 (flucui-themes-load-style 'light)
 
-(set-default-font "Anonymous Pro 12")
+(set-default-font "Envy Code R 12")
 
 ;; keybindings
 (global-set-key (kbd "M-o") 'ace-window)
@@ -30,10 +30,9 @@
 (global-set-key (kbd "C-c C-y") 'term-paste)
 
 ;; bigger initial size
-(add-to-list 'initial-frame-alist '(height . 44))
-(add-to-list 'initial-frame-alist '(width . 140))
-(add-to-list 'initial-frame-alist '(top . 80))
-(add-to-list 'initial-frame-alist '(left . 55))
+;(add-to-list 'initial-frame-alist '(height . 30))
+;(add-to-list 'initial-frame-alist '(width . 100))
+;(setq frame-resize-pixelwise t)
 
 ;; central save files
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -176,6 +175,7 @@
 ;(setq org-mode-hook nil) ;;for some reason there's a lot of shit in the org hook that breaks it?
 (add-hook 'org-mode-hook 'outline-minor-mode)
 (add-hook 'org-mode-hook 'outline-hide-body)
+(add-hook 'org-mode-hook 'org-indent-mode)
 (require 'ox-extra)
 (ox-extras-activate '(ignore-headlines))
 
@@ -185,12 +185,10 @@
 (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 (setq org-use-fast-todo-selection 1)
 (setq org-capture-templates
-      '(("h" "home" entry (file "~/Dropbox/org/todo.org")
-         "* HOME %?\n DEADLINE: %^t\n")
-        ("w" "work" entry (file "~/Dropbox/org/todo.org")
-         "* WORK %?\n DEADLINE: %^t\n")
-        ("s" "school" entry (file "~/Dropbox/org/todo.org")
-           "* SCHL %?\n DEADLINE: %^t\n")))
+      '(("t" "todo" entry (file "~/Dropbox/org/todo.org")
+         "* TODO %?\n DEADLINE: %^t\n")))
+(setq org-agenda-span 14)
+(setq start-on-weekday nil)
 
 ;; org-download
 (use-package org-download
@@ -199,19 +197,19 @@
 (setq org-download-method 'attach)
 (setq org-download-annotate-function (lambda (_link) ""))
 
-;; python notebooks
-(use-package ob-ipython
-  :ensure t)
+;; jupyter notebook integration
 (use-package ein
   :ensure t)
 
+;; load python and jupyter
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((ipython . t)
-   (ein . t)
+ '((ein . t)
    ;; other languages..
    ))
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+
+;; if i need to use python virtual envs
 (use-package pyvenv
   :ensure t)
 (use-package virtualenvwrapper

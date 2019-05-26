@@ -14,11 +14,14 @@
 
 (use-package flucui-themes
   :ensure t)
-(flucui-themes-load-style 'light)
+;(flucui-themes-load-style 'light)
+(use-package color-theme-sanityinc-tomorrow
+  :ensure t)
+(color-theme-sanityinc-tomorrow-night)
 
 (set-default-font "Envy Code R 12")
 
-;; keybindings
+;; global keybindings
 (global-set-key (kbd "M-o") 'ace-window)
 (global-set-key (kbd "M-r") 'isearch-backward-regexp)
 (global-set-key (kbd "M-s") 'isearch-forward-regexp)
@@ -28,6 +31,7 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c s s") 'org-download-screenshot)
 (global-set-key (kbd "C-c C-y") 'term-paste)
+(global-set-key (kbd "C-c l") 'org-store-link)
 
 ;; bigger initial size
 ;(add-to-list 'initial-frame-alist '(height . 30))
@@ -55,8 +59,22 @@
  cursor-type '(bar . 5)          ; set cursor type to bar
  line-spacing 4)                 ; line spacing
 
+;; mu4e
+;; don't use use-package because it comes with mail-utils package
+(require 'mu4e)
+(setq mu4e-contexts
+ `( ,(make-mu4e-context
+     :name "Gmail"
+     :match-func (lambda (msg) (when msg
+       (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+     :vars '(
+       (mu4e-trash-folder . "/Gmail/[Gmail].Trash")
+       (mu4e-refile-folder . "/Gmail/[Gmail].Archive")
+       ))
+   ))
+
 ;; term
-(setq explicit-shell-filename "/bin/zsh")
+(setq explicit-shell-filename "/bin/bash")
 (setq term-scroll-show-maximum-output 1)
 (add-hook 'term-mode-hook #'eterm-256color-mode)
 (eval-after-load "term"
@@ -66,7 +84,7 @@
 ;; multiterm
 (use-package multi-term
   :ensure t)
-(setq multi-term-program "/bin/zsh")
+(setq multi-term-program "/bin/bash")
 (setq multi-term-scroll-show-maximum-output 1)
 (add-hook 'term-mode-hook (lambda ()
                             (define-key term-raw-map (kbd "M-o") 'ace-window)
@@ -176,8 +194,14 @@
 (add-hook 'org-mode-hook 'outline-minor-mode)
 (add-hook 'org-mode-hook 'outline-hide-body)
 (add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'org-mode-hook 'org-toggle-inline-images)
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
 (require 'ox-extra)
 (ox-extras-activate '(ignore-headlines))
+
+;; org keybindings
+(define-key org-mode-map (kbd "C-c C-l") 'org-insert-last-stored-link)
+
 
 ;; agenda configuration
 (setq org-agenda-files
@@ -233,3 +257,13 @@
 
 ;; nonblinking cursor ffs
 (blink-cursor-mode 0)
+
+;; better image viewing
+(use-package image+
+  :ensure t)
+(eval-after-load 'image '(require 'image+))
+(eval-after-load 'image+ '(imagex-global-sticky-mode 1))
+(eval-after-load 'image+ '(imagex-auto-adjust-mode 1))
+
+;; upcase region is tight
+(put 'upcase-region 'disabled nil)

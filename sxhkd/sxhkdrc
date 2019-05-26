@@ -8,6 +8,10 @@ super + o
 # wm independent hotkeys
 #
 
+# spotify needs device scale factor
+super + s
+	spotify --force-device-scale-factor=1.5
+
 # terminal emulator
 super + Return
 	tabbed -c urxvt -embed
@@ -26,7 +30,7 @@ super + Escape
 
 # lock screen
 super + shift + Escape
-      	/usr/local/bin/slock
+      	/usr/local/bin/lockscreen
 
 #
 # bspwm hotkeys

@@ -1,12 +1,13 @@
 #! /bin/sh
 
-bspc monitor eDP1 -d I II III 
-bspc monitor DP1 -d IV V VI
+bspc monitor -d 1 2 3 4 5
+#bspc monitor eDP1 -n 0 -d 1 2 3 4 5
+#bspc monitor DP1 -n 1 -d 1 2 3 4 5
 
 bspc config border_width         10
 bspc config window_gap           20
 
-bspc config split_ratio          0.60
+bspc config split_ratio          0.50
 bspc config borderless_monocle   false
 bspc config gapless_monocle      false
 bspc config honor_size_hints     false
@@ -24,3 +25,4 @@ polybar bar1 &
 dropbox start &
 nm-applet &
 dunst &
+redshift &

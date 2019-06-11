@@ -14,7 +14,7 @@ super + s
 
 # terminal emulator
 super + Return
-	tabbed -c urxvt -embed
+	tabbed -n "urxvt" -c urxvt -embed 
 
 # emacs is fucky
 super + e
@@ -66,7 +66,7 @@ super + {t,shift + t,s,f}
 
 # turn into drop down terminal with tdrop
 super + shift + grave
-      tdrop -w 2560 -h 1440 -x 10% -y 40 -a current
+      tdrop -w 2560 -h 1440 -x 10% -y 60 -a current
 
 # set the node flags
 super + ctrl + {x,y,z}

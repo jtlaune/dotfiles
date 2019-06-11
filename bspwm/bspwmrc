@@ -12,17 +12,18 @@ bspc config borderless_monocle   false
 bspc config gapless_monocle      false
 bspc config honor_size_hints     false
 
-#bspc rule -a Chromium desktop='^1'
 bspc rule -a Pavucontrol state="floating"
+bspc rule -a ImageMagick state="floating"
 bspc rule -a Gimp state="floating"
 # emacs is fucky if it starts off tiled
 bspc rule -a Emacs state="floating"
 
-# start polybar
-polybar bar1 &
+# start panel
+$HOME/lemonbar.sh &
 
 # start applications
 dropbox start &
 nm-applet &
 dunst &
 redshift &
+compton &

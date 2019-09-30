@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# A script which opens zathura sessions
+# in tabbed under the WM_CLASS "docs"
+# from https://buck.ludd.ltu.se/tmplt/dotfiles/blob/master/bin/bin/tzathura
+
+[[ ! -f "$1" ]] && echo "No such file" && exit 1
+
+IFS="" # for files with spaces in name
+[[ -z $((xprop -id $(</tmp/zathura.xid)) 2>/dev/null) ]] && tabbed -f -p s+1 -n "docs" -d > /tmp/zathura.xid
+exec zathura --reparent=$(</tmp/zathura.xid) $( [[ "$1" ]] && printf "$1") & &>/dev/null

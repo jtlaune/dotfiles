@@ -1,0 +1,7 @@
+#!/bin/bash
+URL="$1"
+URL="${URL##*//}"
+URL="${URL%%/*}"
+bw get password "$URL" --session "$(<$HOME/.bwsession)" | xsel -b
+sleep 10
+xsel -bc

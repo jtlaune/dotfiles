@@ -1,0 +1,4 @@
+#!/bin/bash
+wname sshpf
+echo "listening on port $1"
+exec ssh -L $1:localhost:$1 jtlaune@wtrw.lanl.gov "ssh -L $1:localhost:$1 gr-fe2"

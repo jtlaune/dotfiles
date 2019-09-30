@@ -1,0 +1,2 @@
+#!/bin/bash
+xrandr --output DP1 --mode 1920x1080 --rate 60 --fb 3200x1800 --panning 3200x1800 --scale-from 3200x1800

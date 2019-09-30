@@ -1,0 +1,9 @@
+#!/bin/bash
+session="$(bw unlock --raw)" 
+if [ "$session" = "Invalid master password." ]
+then
+	notify-send "Invalid master password."
+else
+	echo "$session" > $HOME/.bwsession
+	notify-send "Your vault is now unlocked."
+fi

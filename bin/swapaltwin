@@ -1,0 +1,4 @@
+#!/bin/bash
+setxkbmap -option
+setxkbmap -option caps:escape
+setxkbmap -option altwin:swap_lalt_lwin

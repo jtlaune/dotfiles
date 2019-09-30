@@ -259,15 +259,30 @@
 
 
 ;; agenda configuration
+(setq org-agenda-sticky 't)
 (setq org-agenda-files
-      (list "~/Dropbox/org/todo.org"))
+      (list "~/Dropbox/org/todo.org" "~/Dropbox/org/calendar.org"))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 (setq org-use-fast-todo-selection 1)
 (setq org-capture-templates
       '(("t" "todo" entry (file "~/Dropbox/org/todo.org")
-         "* TODO %?\n DEADLINE: %^t\n")))
-(setq org-agenda-span 14)
-(setq start-on-weekday nil)
+         "* TODO %?\n")))
+(setq org-agenda-start-day "0d")
+(setq org-agenda-span 7)
+(setq org-agenda-start-on-weekday nil)
+(setq org-agenda-hide-tags-regexp "home\\|work\\|school")
+(setq org-agenda-custom-commands
+      '(("b" "block view"
+	 ((tags-todo "+TODO=\"PROG\""
+		     ((org-agenda-overriding-header "\nin progress\n")))
+	  (tags-todo "+@work+TODO=\"TODO\""
+		     ((org-agenda-overriding-header "\nwork tasks\n")))
+	  (tags-todo "+TODO=\"HW\""
+		     ((org-agenda-overriding-header "\nschool tasks\n")))
+	  (tags-todo "-@work+TODO=\"TODO\""
+		     ((org-agenda-overriding-header "\nhome tasks\n")))
+	  (agenda ""
+		  ((org-agenda-overriding-header "\nagenda for today\n")))))))
 
 ;; org-download
 (use-package org-download

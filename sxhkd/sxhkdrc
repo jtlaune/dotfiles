@@ -1,8 +1,8 @@
 # temporary for configuration purposes
 super + p
-      	killall polybar; polybar bar1
+      	swapaltwin
 super + o
-      	killall compton; compton
+      	revertaltwin
 
 #
 # wm independent hotkeys

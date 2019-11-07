@@ -203,7 +203,8 @@
 (setq TeX-parse-self t)
 (setq-default TeX-source-correlate-start-server t)
 (add-hook 'TeX-after-compilation-finished-functions
-           #'TeX-revert-document-buffer)
+           #'TeX-revert-document-buffer
+	   'TeX-view)
 (global-font-lock-mode 1)
 (set-default 'preview-scale-function 3.0)
 (setq font-latex-fontify-script nil)
@@ -261,25 +262,35 @@
 ;; agenda configuration
 (setq org-agenda-sticky 't)
 (setq org-agenda-files
-      (list "~/Dropbox/org/todo.org" "~/Dropbox/org/calendar.org"))
+      (list "~/Dropbox/org/todo.org" "~/Dropbox/org/calendar.org" "~/Dropbox/org/fships.org"))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 (setq org-use-fast-todo-selection 1)
 (setq org-capture-templates
-      '(("t" "todo" entry (file "~/Dropbox/org/todo.org")
-         "* TODO %?\n")))
+      '(("h" "home" entry (file "~/Dropbox/org/todo.org")
+         "* TODO %? :home: \n")
+      ("s" "school" entry (file "~/Dropbox/org/todo.org")
+         "* TODO %? :school: \n")
+      ("w" "work" entry (file "~/Dropbox/org/todo.org")
+         "* TODO %? :work: \n")
+      ("c" "CSGF" entry (file+headline "~/Dropbox/org/fships.org" "CSGF")
+         "* TODO %? :fellowship: \n")
+      ("f" "FINESST" entry (file+headline "~/Dropbox/org/fships.org" "FINESST")
+         "* TODO %? :fellowship: \n")))
 (setq org-agenda-start-day "0d")
 (setq org-agenda-span 7)
 (setq org-agenda-start-on-weekday nil)
-(setq org-agenda-hide-tags-regexp "home\\|work\\|school")
+(setq org-agenda-hide-tags-regexp "home\\|work\\|school\\|fellowship")
 (setq org-agenda-custom-commands
       '(("b" "block view"
 	 ((tags-todo "+TODO=\"PROG\""
 		     ((org-agenda-overriding-header "\nin progress\n")))
-	  (tags-todo "+@work+TODO=\"TODO\""
+	  (tags-todo "+work+TODO=\"TODO\""
 		     ((org-agenda-overriding-header "\nwork tasks\n")))
-	  (tags-todo "+TODO=\"HW\""
+	  (tags-todo "+school+TODO=\"TODO\""
 		     ((org-agenda-overriding-header "\nschool tasks\n")))
-	  (tags-todo "-@work+TODO=\"TODO\""
+	  (tags-todo "+fellowship+TODO=\"TODO\""
+		     ((org-agenda-overriding-header "\nfellowship tasks\n")))
+	  (tags-todo "+home+TODO=\"TODO\""
 		     ((org-agenda-overriding-header "\nhome tasks\n")))
 	  (agenda ""
 		  ((org-agenda-overriding-header "\nagenda for today\n")))))))
@@ -294,6 +305,14 @@
 ;; jupyter notebook integration
 (use-package ein
   :ensure t)
+
+;; python editing mf SPACES
+(setq-default electric-indent-inhibit t)
+(add-hook 'python-mode-hook
+    (lambda ()
+       (setq indent-tabs-mode nil)
+       (setq tab-width 4)
+       (setq python-indent-offset 4)))
 
 ;; load python and jupyter
 (org-babel-do-load-languages

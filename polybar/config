@@ -26,11 +26,11 @@ secondary = ${xrdb:color2:#222}
 alert = ${xrdb:color3:#222}
 
 [bar/bar1]
-monitor = ${env:MONITOR:eDP1}
-width = 3160
-height = 40
-offset-x = 20
-offset-y = 10
+;monitor = ${env:MONITOR:eDP1}
+width = 3200
+height = 100 
+offset-x = 0
+offset-y = 0
 radius = 0.0
 fixed-center = true
 
@@ -51,12 +51,12 @@ module-margin-right = 1
 
 font-0 = UndefinedMedium:size=20;1
 font-1 = unifont:fontformat=truetype:size=18:antialias=false;0
-font-2 = siji:pixelsize=20;1
-font-3 = FontAwesome:size=16;1
+font-2 = siji:pixelsize=20;1 # this is way too small for hidpi. don't use.
+font-3 = FontAwesome:size=14;1
 
-modules-left = bspwm
-modules-center = 
-modules-right = battery date time
+modules-left = hlws
+modules-center = xwindow
+modules-right = battery  wlan date
 
 tray-position = right
 tray-padding = 2
@@ -106,43 +106,51 @@ label-empty-padding = 2
 
 ; Separator in between workspaces
 ; label-separator = |
+[module/hlws]
+
+type = custom/script
+exec = ~/bin/hlws
+interval = 0.01
+label-foreground = #f0c674
 
 [module/wlan]
 type = internal/network
-interface = 
+interface = wlp58s0
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
-format-connected-underline = #9f78e1
-label-connected = %essid%
+;format-connected-underline = #9f78e1
+label-connected = "  %essid%   "
+label-connected-foreground = #cc6666
 
-format-disconnected =
+format-disconnected = 
 ;format-disconnected = <label-disconnected>
 ;format-disconnected-underline = ${self.format-connected-underline}
 ;label-disconnected = %ifname% disconnected
 ;label-disconnected-foreground = ${colors.foreground-alt}
 
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
-ramp-signal-foreground = ${colors.foreground-alt}
+ramp-signal-0 =  
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = #cc6666
 
 [module/date]
 type = internal/date
 interval = 5
 
-date =" %m-%d"
-date-alt = " %Y-%m-%d"
+date ="%m-%d"
+date-alt = "%Y-%m-%d"
 
 time = %H:%M
 time-alt = %H:%M:%S
 
-format-prefix =
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix = 
+format-prefix-foreground = #b5bd68
 ;format-underline = ${xrdb:color3:#222}
-label = %date%
+label = "   %date% %time% "
+label-foreground = #b5bd68
 
 [module/time]
 type = internal/date
@@ -163,34 +171,39 @@ label = %time%
 type = internal/battery
 battery = BAT0
 adapter = AC
-full-at = 98
+full-at = 80 
 
-format-charging = <animation-charging> <label-charging>
+format-charging = "<animation-charging>   <label-charging>   "
 ;format-charging-underline = #ffb52a
 ;format-charging-underline = ${xrdb:color4:#222}
+format-charging-underline = 
+label-charging-foreground = #81a2be
 
-format-discharging = <animation-discharging> <label-discharging>
+format-discharging = "<ramp-capacity>    <label-discharging>   "
 ;format-discharging-underline = ${self.format-charging-underline}
+label-discharging-foreground = #81a2be
 
+format-full = "<ramp-capacity>    <label-full>   "
 format-full-prefix = 
 format-full-prefix-foreground = ${colors.foreground-alt}
 ;format-full-underline = ${self.format-charging-underline}
+label-full-foreground = #81a2be
 
-ramp-capacity-0 =  
-ramp-capacity-1 =  
-ramp-capacity-2 =  
-ramp-capacity-foreground = ${colors.foreground-alt}
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-foreground = #81a2be
 
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
-animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-foreground = #81a2be
 animation-charging-framerate = 750
 
 animation-discharging-0 = 
 animation-discharging-1 = 
 animation-discharging-2 = 
-animation-discharging-foreground = ${colors.foreground-alt}
+animation-discharging-foreground = #81a2be
 animation-discharging-framerate = 750
 
 [module/powermenu]

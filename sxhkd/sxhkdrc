@@ -1,9 +1,11 @@
-# temporary for configuration purposes
-super + p
-      	swapaltwin
-super + o
-      	revertaltwin
-
+Print
+	scrot screenshot.png
+F10
+	autorandr -l laptop	
+F11
+	autorandr -l docked
+F12
+	swapaltwin
 #
 # wm independent hotkeys
 #

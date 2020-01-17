@@ -262,7 +262,7 @@
 ;; agenda configuration
 (setq org-agenda-sticky 't)
 (setq org-agenda-files
-      (list "~/Dropbox/org/todo.org" "~/Dropbox/org/calendar.org" "~/Dropbox/org/fships.org"))
+      (list "~/Dropbox/org"))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 (setq org-use-fast-todo-selection 1)
 (setq org-capture-templates

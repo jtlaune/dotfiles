@@ -243,7 +243,7 @@
 ;; org
 (use-package org
   :ensure org-plus-contrib)
-(setq org-image-actual-width 800)
+(setq org-image-actual-width 600)
 (setq org-confirm-babel-evaluate nil)
 ;(setq org-mode-hook nil) ;;for some reason there's a lot of shit in the org hook that breaks it?
 (add-hook 'org-mode-hook 'outline-minor-mode)
@@ -306,12 +306,19 @@
 (use-package ein
   :ensure t)
 
+;; Python configuration
+(use-package jedi
+  :ensure t)
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
 ;; python editing mf SPACES
 (setq-default electric-indent-inhibit t)
 (add-hook 'python-mode-hook
     (lambda ()
        (setq indent-tabs-mode nil)
        (setq tab-width 4)
+       (outline-minor-mode)
        (setq python-indent-offset 4)))
 
 ;; load python and jupyter
@@ -329,7 +336,7 @@
   :ensure t)
 (setq venv-location "~/.pythonenvs/")
 
-;; scroll one line at a time (less "jumpy" than defaults)
+;; scroll one line at a time (less jumpy than defaults)
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; 3 lines at a time
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse

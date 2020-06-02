@@ -45,6 +45,11 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
+(defun my/disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil))))
+(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
 ;; give me my nice margins
 ;;(set-frame-parameter nil 'internal-border-width 12)
@@ -156,10 +161,21 @@
 ;; more evil
 (use-package evil-mu4e
   :ensure t)
+(use-package evil-numbers
+  :ensure t)
+(define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+(define-key evil-visual-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-z") 'evil-numbers/dec-at-pt)
+(define-key evil-visual-state-map (kbd "C-z") 'evil-numbers/dec-at-pt)
 
 ;; ace-window
 (use-package ace-window
   :ensure t)
+
+;; set up windmove
+(windmove-default-keybindings)
+(windmove-default-keybindings 'control)
+
 
 ;; colors
 (use-package eterm-256color
@@ -240,6 +256,10 @@
   (spaceline-helm-mode 1)
   (spaceline-spacemacs-theme))
 
+;; dnd
+(add-to-list 'load-path "~/.emacs.d/emacs-org-dnd/")
+(require 'ox-dnd)
+
 ;; org
 (use-package org
   :ensure org-plus-contrib)
@@ -258,11 +278,16 @@
 ;; org keybindings
 (define-key org-mode-map (kbd "C-c C-l") 'org-insert-last-stored-link)
 
+;; helper functions
+(defun insert-problems-todo (count)
+  (interactive "nChapters count: ")
+  (dolist (n (number-sequence 1 count))
+    (insert (format "- [ ] problem %d\n" n))))
 
 ;; agenda configuration
 (setq org-agenda-sticky 't)
 (setq org-agenda-files
-      (list "~/Dropbox/org"))
+      (list "~/Dropbox/org" "~/mmr"))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 (setq org-use-fast-todo-selection 1)
 (setq org-capture-templates
@@ -271,11 +296,7 @@
       ("s" "school" entry (file "~/Dropbox/org/todo.org")
          "* TODO %? :school: \n")
       ("w" "work" entry (file "~/Dropbox/org/todo.org")
-         "* TODO %? :work: \n")
-      ("c" "CSGF" entry (file+headline "~/Dropbox/org/fships.org" "CSGF")
-         "* TODO %? :fellowship: \n")
-      ("f" "FINESST" entry (file+headline "~/Dropbox/org/fships.org" "FINESST")
-         "* TODO %? :fellowship: \n")))
+         "* TODO %? :work: \n")))
 (setq org-agenda-start-day "0d")
 (setq org-agenda-span 7)
 (setq org-agenda-start-on-weekday nil)
@@ -283,13 +304,11 @@
 (setq org-agenda-custom-commands
       '(("b" "block view"
 	 ((tags-todo "+TODO=\"PROG\""
-		     ((org-agenda-overriding-header "\nin progress\n")))
+		     ((org-agenda-overriding-header "\ntodo today\n")))
 	  (tags-todo "+work+TODO=\"TODO\""
 		     ((org-agenda-overriding-header "\nwork tasks\n")))
 	  (tags-todo "+school+TODO=\"TODO\""
 		     ((org-agenda-overriding-header "\nschool tasks\n")))
-	  (tags-todo "+fellowship+TODO=\"TODO\""
-		     ((org-agenda-overriding-header "\nfellowship tasks\n")))
 	  (tags-todo "+home+TODO=\"TODO\""
 		     ((org-agenda-overriding-header "\nhome tasks\n")))
 	  (agenda ""
@@ -305,10 +324,27 @@
 ;; jupyter notebook integration
 (use-package ein
   :ensure t)
+(setq ein:completion-backend 'ein:use-ac-jedi-backend)
+(setq ein:output-area-inlined-images t)
+
+;; EPC for python autocomplete
+(use-package epc
+  :ensure t)
 
 ;; Python configuration
+(use-package deferred
+  :ensure t)
+(use-package auto-complete
+  :ensure t)
+(ac-config-default)
+(use-package python-environment
+  :ensure t)
 (use-package jedi
   :ensure t)
+(setq jedi:environment-root "jedi")  ; or any other name you like
+(setq jedi:environment-virtualenv
+      (append python-environment-virtualenv
+              '("--python" "/home/jtlaune/.pythonvenvs/science-3.7/bin/python3")))
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
 
@@ -326,15 +362,13 @@
  'org-babel-load-languages
  '((ein . t)
    ;; other languages..
+   (python . t)
    ))
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
 
-;; if i need to use python virtual envs
-(use-package pyvenv
+;; better folding?
+(use-package origami
   :ensure t)
-(use-package virtualenvwrapper
-  :ensure t)
-(setq venv-location "~/.pythonenvs/")
 
 ;; scroll one line at a time (less jumpy than defaults)
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; 3 lines at a time

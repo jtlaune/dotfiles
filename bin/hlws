@@ -15,6 +15,9 @@ while i < index:
     elif output[i] == ".":
         wstr = wstr + " o "
         i = i + 1
+    elif output[i] == "-":
+        wstr = wstr + " o "
+        i = i + 1
     elif output[i] == "#":
         wstr = wstr + " x " 
         i = i + 1

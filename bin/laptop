@@ -1,0 +1,5 @@
+#!/bin/bash
+killall polybar
+autorandr -l laptop
+herbstclient set_monitors 3200x1800+0+0
+polybar bar1

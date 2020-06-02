@@ -1,0 +1,5 @@
+#!/bin/bash
+killall polybar
+xrandr --output DP1 --mode 2560x1440 --scale 1.5x1.5
+herbstclient set_monitors 3840x2160
+polybar bar1 &

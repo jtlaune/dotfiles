@@ -64,70 +64,6 @@
  cursor-type '(bar . 5)          ; set cursor type to bar
  line-spacing 4)                 ; line spacing
 
-;; mu4e
-;; don't use use-package because it comes with mail-utils package
-(require 'mu4e)
-;;(setq mu4e-contexts
-;; `( ,(make-mu4e-context
-;;     :name "Gmail"
-;;     :match-func (lambda (msg) (when msg
-;;       (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
-;;     :vars '(
-;;       (mu4e-trash-folder . "/Gmail/[Gmail].Trash")
-;;       (mu4e-refile-folder . "/Gmail/[Gmail].Archive")
-;;       ))
-;;   ))
-(setq mu4e-mailfolder "/home/jtlaune/Maildir"
-      mu4e-trash-folder "/Gmail/[Gmail].Trash"
-      mu4e-sent-folder "/Gmail/[Gmail].Sent Mail"
-      ;; mu4e-sent-messages-behavior 'delete ;; Unsure how this should be configured
-      mu4e-drafts-folder "/Gmail/[Gmail].Drafts"
-      mu4e-refile-folder "/Gmail/Archive")
-;; SMTP settings
-;; I have my "default" parameters from Gmail
-(setq user-mail-address "jtlaune@gmail.com"
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587)
-
-;; Now I set a list of 
-(defvar my-mu4e-account-alist
-  '(("Gmail"
-     (user-mail-address "jtlaune@gmail.com")
-     (smtpmail-smtp-user "jtlaune")
-     (smtpmail-local-domain "gmail.com")
-     (smtpmail-default-smtp-server "smtp.gmail.com")
-     (smtpmail-smtp-server "smtp.gmail.com")
-     (smtpmail-smtp-service 587)
-     )
-     ;; Include any other accounts here ...
-    ))
-
-(defun my-mu4e-set-account ()
-  "Set the account for composing a message.
-   This function is taken from: 
-     https://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html"
-  (let* ((account
-    (if mu4e-compose-parent-message
-        (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-    (string-match "/\\(.*?\\)/" maildir)
-    (match-string 1 maildir))
-      (completing-read (format "Compose with account: (%s) "
-             (mapconcat #'(lambda (var) (car var))
-            my-mu4e-account-alist "/"))
-           (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
-           nil t nil nil (caar my-mu4e-account-alist))))
-   (account-vars (cdr (assoc account my-mu4e-account-alist))))
-    (if account-vars
-  (mapc #'(lambda (var)
-      (set (car var) (cadr var)))
-        account-vars)
-      (error "No email account found"))))
-(add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
-
-;; don't keep message buffers around
-(setq message-kill-buffer-on-exit t)
-
 ;; term
 (setq explicit-shell-filename "/bin/bash")
 (setq term-scroll-show-maximum-output 1)
@@ -159,8 +95,6 @@
 (add-to-list 'evil-emacs-state-modes 'image-mode)
 
 ;; more evil
-(use-package evil-mu4e
-  :ensure t)
 (use-package evil-numbers
   :ensure t)
 (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
@@ -185,16 +119,6 @@
 (use-package helm
   :ensure t)
 (helm-mode 1)
-
-;; projectile 
-(use-package projectile
-  :ensure t)
-(projectile-mode +1)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-(use-package helm-projectile
-  :ensure t)
-(setq projectile-completion-system 'helm)
-(helm-projectile-on)
 
 ;; git
 (use-package magit
@@ -257,13 +181,13 @@
   (spaceline-spacemacs-theme))
 
 ;; dnd
-(add-to-list 'load-path "~/.emacs.d/emacs-org-dnd/")
-(require 'ox-dnd)
+;(add-to-list 'load-path "~/.emacs.d/emacs-org-dnd/")
+;(require 'ox-dnd)
 
 ;; org
 (use-package org
   :ensure org-plus-contrib)
-(setq org-image-actual-width 600)
+(setq org-image-actual-width 400)
 (setq org-confirm-babel-evaluate nil)
 ;(setq org-mode-hook nil) ;;for some reason there's a lot of shit in the org hook that breaks it?
 (add-hook 'org-mode-hook 'outline-minor-mode)
@@ -332,21 +256,21 @@
   :ensure t)
 
 ;; Python configuration
-(use-package deferred
-  :ensure t)
-(use-package auto-complete
-  :ensure t)
-(ac-config-default)
-(use-package python-environment
-  :ensure t)
-(use-package jedi
-  :ensure t)
-(setq jedi:environment-root "jedi")  ; or any other name you like
-(setq jedi:environment-virtualenv
-      (append python-environment-virtualenv
-              '("--python" "/home/jtlaune/.pythonvenvs/science-3.7/bin/python3")))
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
+;(use-package deferred
+;  :ensure t)
+;(use-package auto-complete
+;  :ensure t)
+;(ac-config-default)
+;(use-package python-environment
+;  :ensure t)
+;(use-package jedi
+;  :ensure t)
+;(setq jedi:environment-root "jedi")  ; or any other name you like
+;(setq jedi:environment-virtualenv
+;      (append python-environment-virtualenv
+;              '("--python" "/home/jtlaune/.pythonvenvs/science-3.7/bin/python3")))
+;(add-hook 'python-mode-hook 'jedi:setup)
+;(setq jedi:complete-on-dot t)
 
 ;; python editing mf SPACES
 (setq-default electric-indent-inhibit t)

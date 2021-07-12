@@ -42,7 +42,7 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 
 ;; Fuck outta here with those bars
-(menu-bar-mode -1)
+;(menu-bar-mode -1)
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
 (defun my/disable-scroll-bars (frame)
@@ -245,54 +245,31 @@
 (setq org-download-method 'attach)
 (setq org-download-annotate-function (lambda (_link) ""))
 
-;; jupyter notebook integration
-(use-package ein
+(use-package company
   :ensure t)
-(setq ein:completion-backend 'ein:use-ac-jedi-backend)
-(setq ein:output-area-inlined-images t)
-
-;; EPC for python autocomplete
-(use-package epc
+(use-package company-quickhelp
   :ensure t)
+(company-quickhelp-mode)
+(add-hook 'after-init-hook 'global-company-mode)
 
-;; Python configuration
-;(use-package deferred
-;  :ensure t)
-;(use-package auto-complete
-;  :ensure t)
-;(ac-config-default)
-;(use-package python-environment
-;  :ensure t)
-;(use-package jedi
-;  :ensure t)
-;(setq jedi:environment-root "jedi")  ; or any other name you like
-;(setq jedi:environment-virtualenv
-;      (append python-environment-virtualenv
-;              '("--python" "/home/jtlaune/.pythonvenvs/science-3.7/bin/python3")))
-;(add-hook 'python-mode-hook 'jedi:setup)
-;(setq jedi:complete-on-dot t)
+(use-package elpy
+  :ensure t
+  :init
+  (elpy-enable))
 
-;; python editing mf SPACES
-(setq-default electric-indent-inhibit t)
-(add-hook 'python-mode-hook
-    (lambda ()
-       (setq indent-tabs-mode nil)
-       (setq tab-width 4)
-       (outline-minor-mode)
-       (setq python-indent-offset 4)))
+(setq elpy-rpc-virtualenv-path 'current)
+(setq elpy-rpc-backend "jedi")
 
-;; load python and jupyter
+(use-package jupyter
+  :ensure t
+  :after (:all org python))
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((ein . t)
-   ;; other languages..
+ '((emacs-lisp . t)
+   (julia . t)
    (python . t)
-   ))
-(add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+   (jupyter . t)))
 
-;; better folding?
-(use-package origami
-  :ensure t)
 
 ;; scroll one line at a time (less jumpy than defaults)
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; 3 lines at a time

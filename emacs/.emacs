@@ -19,7 +19,7 @@
   :ensure t)
 (color-theme-sanityinc-tomorrow-night)
 
-(set-frame-font "Envy Code R 12")
+(set-frame-font "Hasklig 12")
 
 ;; global keybindings
 (global-set-key (kbd "M-o") 'ace-window)

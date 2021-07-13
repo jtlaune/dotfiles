@@ -187,17 +187,20 @@
 ;; org
 (use-package org
   :ensure org-plus-contrib)
-(setq org-image-actual-width 400)
+(setq org-image-actual-width 600)
 (setq org-confirm-babel-evaluate nil)
-;(setq org-mode-hook nil) ;;for some reason there's a lot of shit in the org hook that breaks it?
 (add-hook 'org-mode-hook 'outline-minor-mode)
 (add-hook 'org-mode-hook 'outline-hide-body)
 (add-hook 'org-mode-hook 'org-indent-mode)
 (add-hook 'org-mode-hook 'org-toggle-inline-images)
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+(setq org-startup-with-inline-images t)
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
 (require 'ox-extra)
 (ox-extras-activate '(ignore-headlines))
 (setq org-highlight-latex-and-related '(latex script entities))
+
+(setq org-src-fontify-natively t)
 
 ;; org keybindings
 (define-key org-mode-map (kbd "C-c C-l") 'org-insert-last-stored-link)
@@ -266,7 +269,6 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
-   (julia . t)
    (python . t)
    (jupyter . t)))
 
@@ -281,7 +283,8 @@
 (use-package yasnippet
   :ensure t)
 (yas-global-mode 1)
-(put 'downcase-region 'disabled nil)
+(use-package yasnippet-snippets
+  :ensure t)
 
 ;; change all prompts to y or n
 (fset 'yes-or-no-p 'y-or-n-p)

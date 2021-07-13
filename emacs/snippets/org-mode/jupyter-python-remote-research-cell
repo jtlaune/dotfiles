@@ -1,0 +1,8 @@
+# -*- mode: org -*-
+# name: jupyter-python-remote-research-cell
+# key: cell
+# --
+
+#+BEGIN_SRC jupyter-python :session /jpy:localhost#8888:research
+$0
+#+END_SRC

@@ -19,7 +19,7 @@
   :ensure t)
 (color-theme-sanityinc-tomorrow-night)
 
-(set-frame-font "Hasklig 12")
+(set-frame-font "Hasklig-11")
 
 ;; global keybindings
 (global-set-key (kbd "M-o") 'ace-window)
@@ -158,15 +158,15 @@
 (auctex-latexmk-setup)
 
 ;; outline-magic
-(use-package outline-magic
-  :ensure t)
-(setq TeX-outline-extra
-      '(("%chapter" 1)
-        ("%section" 2)
-        ("%subsection" 3)
-        ("%subsubsection" 4)
-        ("%paragraph" 5)))
-(define-key outline-minor-mode-map (kbd "<C-tab>") 'outline-cycle)
+;(use-package outline-magic
+;  :ensure t)
+;(setq TeX-outline-extra
+;      '(("%chapter" 1)
+;        ("%section" 2)
+;        ("%subsection" 3)
+;        ("%subsubsection" 4)
+;        ("%paragraph" 5)))
+;(define-key outline-minor-mode-map (kbd "<C-tab>") 'outline-cycle)
 
 ;; spaceline
 (use-package spaceline
@@ -187,20 +187,26 @@
 ;; org
 (use-package org
   :ensure org-plus-contrib)
-(setq org-image-actual-width 600)
+(setq org-image-actual-width '(600))
 (setq org-confirm-babel-evaluate nil)
-(add-hook 'org-mode-hook 'outline-minor-mode)
-(add-hook 'org-mode-hook 'outline-hide-body)
+;(add-hook 'org-mode-hook 'outline-minor-mode)
+;(add-hook 'org-mode-hook 'outline-hide-body)
 (add-hook 'org-mode-hook 'org-indent-mode)
-(add-hook 'org-mode-hook 'org-toggle-inline-images)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 (require 'ox-extra)
 (ox-extras-activate '(ignore-headlines))
 (setq org-highlight-latex-and-related '(latex script entities))
-
 (setq org-src-fontify-natively t)
+
+(use-package evil-org
+  :ensure t
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode)))
+(evil-org-set-key-theme '(navigation insert textobjects additional calendar))
+(require 'evil-org-agenda)
+(evil-org-agenda-set-keys)
 
 ;; org keybindings
 (define-key org-mode-map (kbd "C-c C-l") 'org-insert-last-stored-link)

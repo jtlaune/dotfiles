@@ -1,0 +1,9 @@
+# -*- mode: org -*-
+# name: jupyter-python-remote-research-split
+# key: spl
+# --
+
+#+END_SRC
+
+#+BEGIN_SRC jupyter-python :session /jpy:localhost#8888:research
+$0

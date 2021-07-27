@@ -102,6 +102,14 @@
 (define-key evil-normal-state-map (kbd "C-z") 'evil-numbers/dec-at-pt)
 (define-key evil-visual-state-map (kbd "C-z") 'evil-numbers/dec-at-pt)
 
+(use-package helm-bibtex
+  :ensure t)
+(add-to-list 'display-buffer-alist
+             '("\\`\\*helm"
+               (display-buffer-in-side-window)
+               (window-height . 0.4)))
+(setq helm-display-function #'display-buffer)
+
 ;; ace-window
 (use-package ace-window
   :ensure t)
@@ -192,6 +200,7 @@
 ;(add-hook 'org-mode-hook 'outline-minor-mode)
 ;(add-hook 'org-mode-hook 'outline-hide-body)
 (add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'org-mode-hook 'evil-org-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
@@ -202,8 +211,7 @@
 
 (use-package evil-org
   :ensure t
-  :after org
-  :hook (org-mode . (lambda () evil-org-mode)))
+  :after org)
 (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
 (require 'evil-org-agenda)
 (evil-org-agenda-set-keys)
@@ -261,6 +269,38 @@
 (company-quickhelp-mode)
 (add-hook 'after-init-hook 'global-company-mode)
 
+;; org-ref
+(use-package org-ref
+  :ensure t)
+(setq reftex-default-bibliography '("~/Dropbox/bibliography/references.bib"))
+
+;; see org-ref for use of these variables
+(setq org-ref-bibliography-notes "~/Dropbox/bibliography/notes.org"
+      org-ref-default-bibliography '("~/Dropbox/bibliography/references.bib")
+      org-ref-pdf-directory "~/Dropbox/bibliography/bibtex-pdfs/")
+(setq bibtex-completion-bibliography "~/Dropbox/bibliography/references.bib"
+      bibtex-completion-library-path "~/Dropbox/bibliography/bibtex-pdfs"
+      bibtex-completion-notes-path "~/Dropbox/bibliography/bibtex-notes")
+
+;; open pdf with system pdf viewer (works on mac)
+(setq bibtex-completion-pdf-open-function
+  (lambda (fpath)
+    (start-process "firefox" "*firefox*" "firefox" fpath)))
+;; alternative
+;; (setq bibtex-completion-pdf-open-function 'org-open-file)
+
+;; BUG/WARNING: this does not find bibliography files in other
+;; directions while in a symlinked directory. current workaround is to
+;; symlink the master ~/Dropbox/bibliography/references.bib file to
+;; the working directory while im writing. afterwards, can use
+;; org-ref-extract-bibtex-to-file to create a final .bib file.
+(setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex -interaction nonstopmode' -pdf -bibtex -f %f"))
+
+;; focus mode
+(use-package focus
+  :ensure t)
+
+;; Python environment
 (use-package elpy
   :ensure t
   :init
@@ -275,6 +315,7 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
+   (latex . t)
    (python . t)
    (jupyter . t)))
 
@@ -304,6 +345,11 @@
 (eval-after-load 'image '(require 'image+))
 (eval-after-load 'image+ '(imagex-global-sticky-mode 1))
 (eval-after-load 'image+ '(imagex-auto-adjust-mode 1))
+;; this is a shitty package bc this literally was mentioned in the
+;; README to quiet minibuffer errors
+(setq imagex-quiet-error t)
+
 
 ;; upcase region is tight
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)

@@ -102,14 +102,6 @@
 (define-key evil-normal-state-map (kbd "C-z") 'evil-numbers/dec-at-pt)
 (define-key evil-visual-state-map (kbd "C-z") 'evil-numbers/dec-at-pt)
 
-(use-package helm-bibtex
-  :ensure t)
-(add-to-list 'display-buffer-alist
-             '("\\`\\*helm"
-               (display-buffer-in-side-window)
-               (window-height . 0.4)))
-(setq helm-display-function #'display-buffer)
-
 ;; ace-window
 (use-package ace-window
   :ensure t)
@@ -117,7 +109,6 @@
 ;; set up windmove
 (windmove-default-keybindings)
 (windmove-default-keybindings 'control)
-
 
 ;; colors
 (use-package eterm-256color
@@ -127,10 +118,22 @@
 (use-package helm
   :ensure t)
 (helm-mode 1)
+;; helm bibtex
+(use-package helm-bibtex
+  :ensure t)
+(add-to-list 'display-buffer-alist
+             '("\\`\\*helm"
+               (display-buffer-in-side-window)
+               (window-height . 0.4)))
+(setq helm-display-function #'display-buffer)
 
 ;; git
 (use-package magit
   :ensure t)
+;; turn off magit-auto-revert-mode, causes lots of problems with pdf-tools
+;; and latex export. (error "Trying to use a menu from within a menu-entry")
+;(global-auto-revert-mode nil)
+;;(magit-auto-revert-mode nil)
 
 ;; pdf
 (use-package pdf-tools
@@ -187,6 +190,29 @@
   :config
   (spaceline-helm-mode 1)
   (spaceline-spacemacs-theme))
+
+;; Python environment
+(use-package elpy
+  :ensure t
+  :init
+  (elpy-enable))
+
+(setq elpy-rpc-virtualenv-path 'current)
+(setq elpy-rpc-backend "jedi")
+
+;; pyvenv
+(pyvenv-workon "science")
+
+(use-package jupyter
+  :ensure t
+  :after (:all org python))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (latex . t)
+   (python . t)
+   (jupyter . t)))
+
 
 ;; dnd
 ;(add-to-list 'load-path "~/.emacs.d/emacs-org-dnd/")
@@ -296,29 +322,16 @@
 ;; org-ref-extract-bibtex-to-file to create a final .bib file.
 (setq org-latex-pdf-process '("latexmk -pdflatex='pdflatex -interaction nonstopmode' -pdf -bibtex -f %f"))
 
+(with-eval-after-load 'ox-latex
+   (add-to-list 'org-latex-classes
+                '("mnras"
+                  "\\documentclass{mnras}"
+                  ("\\section{%s}" . "\\section*{%s}")
+                  ("\\subsection{%s}" . "\\subsection*{%s}")
+                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
 ;; focus mode
 (use-package focus
   :ensure t)
-
-;; Python environment
-(use-package elpy
-  :ensure t
-  :init
-  (elpy-enable))
-
-(setq elpy-rpc-virtualenv-path 'current)
-(setq elpy-rpc-backend "jedi")
-
-(use-package jupyter
-  :ensure t
-  :after (:all org python))
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (latex . t)
-   (python . t)
-   (jupyter . t)))
-
 
 ;; scroll one line at a time (less jumpy than defaults)
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; 3 lines at a time
@@ -353,3 +366,4 @@
 ;; upcase region is tight
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+

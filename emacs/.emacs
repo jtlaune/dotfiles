@@ -254,32 +254,32 @@
 ;; agenda configuration
 (setq org-agenda-sticky 't)
 (setq org-agenda-files
-      (list "~/Dropbox/org" "~/mmr"))
+      (list "~/Dropbox/org" "~/multi-planet-architecture/notes"))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 (setq org-use-fast-todo-selection 1)
-(setq org-capture-templates
-      '(("h" "home" entry (file "~/Dropbox/org/todo.org")
-         "* TODO %? :home: \n")
-      ("s" "school" entry (file "~/Dropbox/org/todo.org")
-         "* TODO %? :school: \n")
-      ("w" "work" entry (file "~/Dropbox/org/todo.org")
-         "* TODO %? :work: \n")))
+;(setq org-capture-templates
+;      '(("h" "home" entry (file "~/Dropbox/org/todo.org")
+;         "* TODO %? :home: \n")
+;      ("s" "school" entry (file "~/Dropbox/org/todo.org")
+;         "* TODO %? :school: \n")
+;      ("w" "work" entry (file "~/Dropbox/org/todo.org")
+;         "* TODO %? :work: \n")))
 (setq org-agenda-start-day "0d")
 (setq org-agenda-span 7)
 (setq org-agenda-start-on-weekday nil)
-(setq org-agenda-hide-tags-regexp "home\\|work\\|school\\|fellowship")
-(setq org-agenda-custom-commands
-      '(("b" "block view"
-	 ((tags-todo "+TODO=\"PROG\""
-		     ((org-agenda-overriding-header "\ntodo today\n")))
-	  (tags-todo "+work+TODO=\"TODO\""
-		     ((org-agenda-overriding-header "\nwork tasks\n")))
-	  (tags-todo "+school+TODO=\"TODO\""
-		     ((org-agenda-overriding-header "\nschool tasks\n")))
-	  (tags-todo "+home+TODO=\"TODO\""
-		     ((org-agenda-overriding-header "\nhome tasks\n")))
-	  (agenda ""
-		  ((org-agenda-overriding-header "\nagenda for today\n")))))))
+;(setq org-agenda-hide-tags-regexp "home\\|work\\|school\\|fellowship")
+;(setq org-agenda-custom-commands
+;      '(("b" "block view"
+;	 ((tags-todo "+TODO=\"PROG\""
+;		     ((org-agenda-overriding-header "\ntodo today\n")))
+;	  (tags-todo "+work+TODO=\"TODO\""
+;		     ((org-agenda-overriding-header "\nwork tasks\n")))
+;	  (tags-todo "+school+TODO=\"TODO\""
+;		     ((org-agenda-overriding-header "\nschool tasks\n")))
+;	  (tags-todo "+home+TODO=\"TODO\""
+;		     ((org-agenda-overriding-header "\nhome tasks\n")))
+;	  (agenda ""
+;		  ((org-agenda-overriding-header "\nagenda for today\n")))))))
 
 ;; org-download
 (use-package org-download
@@ -367,3 +367,5 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
+(use-package rainbow-mode
+  :ensure t)

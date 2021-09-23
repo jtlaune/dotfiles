@@ -19,7 +19,10 @@
   :ensure t)
 (color-theme-sanityinc-tomorrow-night)
 
-(set-frame-font "Hasklig-11")
+;; have to use default-frame-alist for daemon emacs
+(add-to-list 'default-frame-alist '(font . "Hasklig 12"))
+(add-to-list 'default-frame-alist '(tool-bar-lines . 0))
+(add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 
 ;; global keybindings
 (global-set-key (kbd "M-o") 'ace-window)
@@ -41,10 +44,6 @@
 ;; central save files
 (setq backup-directory-alist `(("." . "~/.saves")))
 
-;; Fuck outta here with those bars
-;(menu-bar-mode -1)
-(tool-bar-mode -1)
-(toggle-scroll-bar -1)
 (defun my/disable-scroll-bars (frame)
   (modify-frame-parameters frame
                            '((vertical-scroll-bars . nil)

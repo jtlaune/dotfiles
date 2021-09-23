@@ -1,2 +1,2 @@
 #!/bin/bash
-ssh -L localhost:8888:localhost:56473 pi@10.0.2.1 ssh -L localhost:56473:localhost:8888 jtlaune@192.168.1.2
+ssh -L localhost:8888:localhost:56473 pi ssh -L localhost:56473:localhost:8888 tinnytim

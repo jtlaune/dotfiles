@@ -298,7 +298,8 @@
 (use-package org-ref
   :ensure t)
 (setq reftex-default-bibliography '("~/Dropbox/bibliography/references.bib"))
-
+;; pre and post text in citations
+(setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions)) 'org-ref-format-citation)
 ;; see org-ref for use of these variables
 (setq org-ref-bibliography-notes "~/Dropbox/bibliography/notes.org"
       org-ref-default-bibliography '("~/Dropbox/bibliography/references.bib")
@@ -332,11 +333,17 @@
 (use-package focus
   :ensure t)
 
-;; scroll one line at a time (less jumpy than defaults)
-(setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; 3 lines at a time
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-(setq scroll-step 1) ;; keyboard scroll one line at a time
+;; good-scroll package
+(use-package good-scroll
+  :ensure t)
+;(good-scroll-mode 1)
+
+;; scroll one line at a time (less jumpy than defaults), possibly
+;; replaced by good-scroll?
+;(setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; 3 lines at a time
+;(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+;(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+;(setq scroll-step 1) ;; keyboard scroll one line at a time
 
 ;; yasnippet
 (use-package yasnippet

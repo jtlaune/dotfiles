@@ -200,6 +200,7 @@
 (setq elpy-rpc-backend "jedi")
 
 ;; pyvenv
+(setenv "WORKON_HOME" "/home/jtlaune/miniconda3/envs")
 (pyvenv-workon "science")
 
 (use-package jupyter

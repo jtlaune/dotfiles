@@ -334,9 +334,9 @@
 (use-package focus
   :ensure t)
 
-;; good-scroll package
-(use-package good-scroll
-  :ensure t)
+;; good-scroll package seems to crash emacs on scratch
+;(use-package good-scroll
+;  :ensure t)
 ;(good-scroll-mode 1)
 
 ;; scroll one line at a time (less jumpy than defaults), possibly

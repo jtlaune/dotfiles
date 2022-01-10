@@ -3,7 +3,8 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (require 'package)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 (package-initialize)
@@ -12,17 +13,26 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-(use-package flucui-themes
+;; themes
+(use-package all-the-icons
   :ensure t)
-;(flucui-themes-load-style 'light)
-(use-package color-theme-sanityinc-tomorrow
+
+(use-package sublime-themes
   :ensure t)
-(color-theme-sanityinc-tomorrow-night)
+(load-theme 'junio t)
 
 ;; have to use default-frame-alist for daemon emacs
-(add-to-list 'default-frame-alist '(font . "Hasklig 12"))
+(add-to-list 'default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 14"))
 (add-to-list 'default-frame-alist '(tool-bar-lines . 0))
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
+(menu-bar-mode -1)
+
+;; custom functions
+;;(defun ...
+(defun my-file-contents (file)
+  (with-temp-buffer
+    (insert-file-contents file)
+    (buffer-string)))
 
 ;; global keybindings
 (global-set-key (kbd "M-o") 'ace-window)
@@ -35,6 +45,8 @@
 (global-set-key (kbd "C-c s s") 'org-download-screenshot)
 (global-set-key (kbd "C-c C-y") 'term-paste)
 (global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c x r") 'eval-buffer)
+(global-set-key (kbd "C-c r b") 'revert-buffer)
 
 ;; bigger initial size
 ;(add-to-list 'initial-frame-alist '(height . 30))
@@ -88,10 +100,14 @@
   (require 'use-package))
 
 ;; evil
+(setq evil-want-keybinding nil)
 (use-package evil
   :ensure t)
 (evil-mode t)
 (add-to-list 'evil-emacs-state-modes 'image-mode)
+(use-package evil-collection
+  :ensure t)
+(evil-collection-init)
 
 ;; more evil
 (use-package evil-numbers
@@ -125,6 +141,19 @@
                (display-buffer-in-side-window)
                (window-height . 0.4)))
 (setq helm-display-function #'display-buffer)
+
+;; projectile
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
+(use-package helm-projectile
+  :ensure t)
+(setq projectile-project-search-path
+      '(("~/multi-planet-architecture/projects/" . 1) ("~/" . 1)))
 
 ;; git
 (use-package magit
@@ -199,6 +228,11 @@
 (setq elpy-rpc-virtualenv-path 'current)
 (setq elpy-rpc-backend "jedi")
 
+(defun my-hs-hide-python ()
+  (hs-minor-mode)
+  (hs-hide-level 2))
+(add-hook 'python-mode-hook #'my-hs-hide-python)
+
 ;; pyvenv
 (setenv "WORKON_HOME" "/home/jtlaune/miniconda3/envs")
 (pyvenv-workon "science")
@@ -220,7 +254,9 @@
 
 ;; org
 (use-package org
-  :ensure org-plus-contrib)
+  :ensure t)
+(use-package org-contrib
+  :ensure t)
 (setq org-image-actual-width '(600))
 (setq org-confirm-babel-evaluate nil)
 ;(add-hook 'org-mode-hook 'outline-minor-mode)
@@ -230,6 +266,7 @@
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
+(setq org-latex-prefer-user-labels t)
 (require 'ox-extra)
 (ox-extras-activate '(ignore-headlines))
 (setq org-highlight-latex-and-related '(latex script entities))

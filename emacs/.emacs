@@ -207,12 +207,20 @@
 ;        ("%paragraph" 5)))
 ;(define-key outline-minor-mode-map (kbd "<C-tab>") 'outline-cycle)
 
+;; powerline
+(use-package powerline
+  :ensure t
+  :config
+  (powerline-default-theme))
+
+
+;; for some reason spaceline is throwing startup errors even
+;; after reinstalling
 ;; spaceline
 (use-package spaceline
   :ensure t
   :config
   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
-
 (use-package spaceline-config
   :ensure spaceline
   :config

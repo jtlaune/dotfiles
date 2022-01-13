@@ -45,6 +45,9 @@ gaps outer 5
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+# start a text editor
+bindsym $mod+t exec emacsclient -c
+
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
 
@@ -72,10 +75,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -186,6 +189,7 @@ focus_follows_mouse no
 for_window [class="Pavucontrol"] floating enable
 for_window [class="Eog"] floating enable
 for_window [class="Gscreenshot"] floating enable
+for_window [workspace="1"] floating enable
 
 # Start polybar & other useful startup programs.
 # Keeping this local to WM configs so I can have
@@ -193,6 +197,8 @@ for_window [class="Gscreenshot"] floating enable
 # it all in xinitrc.
 exec --no-startup-id polybar example
 exec --no-startup-id dropbox start
+exec --no-startup-id redshift-gtk
+exec --no-startup-id emacs --daemon
 exec --no-startup-id feh --bg-fill ~/dotfiles/wallpapers/paintsplash.png
 exec_always --no-startup-id xset s 300
 exec_always --no-startup-id xautolock -time 15 -locker "sudo zzz"

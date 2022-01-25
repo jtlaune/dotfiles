@@ -3,6 +3,7 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (require 'package)
+;org moved to nongnu. delete in future.
 ;(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
@@ -13,13 +14,6 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;; themes
-(use-package all-the-icons
-  :ensure t)
-
-(use-package sublime-themes
-  :ensure t)
-(load-theme 'junio t)
 
 ;; have to use default-frame-alist for daemon emacs
 (add-to-list 'default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 14"))
@@ -33,6 +27,23 @@
   (with-temp-buffer
     (insert-file-contents file)
     (buffer-string)))
+
+(defun random-alnum () ()
+  (let* ((alnum "abcdefghijklmnopqrstuvwxyz0123456789")
+         (i (% (abs (random)) (length alnum))))
+    (substring alnum i (1+ i))))
+
+(defun random-5-letter-string () ()
+   (concat 
+    (random-alnum)
+    (random-alnum)
+    (random-alnum)
+    (random-alnum)
+    (random-alnum)))
+
+(defun kill-random-5-letter-string ()
+  (interactive)
+  (kill-new (random-5-letter-string)))
 
 ;; global keybindings
 (global-set-key (kbd "M-o") 'ace-window)
@@ -69,7 +80,8 @@
 ;; gimme some nice windows pls
 (setq-default
  inhibit-startup-screen t
- initial-scratch-message ";; Happy Hacking!!"
+ ;initial-scratch-message ";; Happy Hacking!!"
+ initial-scratch-message "#+TITLE: Scratch Buffer"
  left-margin-width 1 right-margin-width 1     ; Add left and right margins
  select-enable-clipboard t       ; Merge system's and Emacs' clipboard
  cursor-type '(bar . 5)          ; set cursor type to bar
@@ -112,10 +124,8 @@
 ;; more evil
 (use-package evil-numbers
   :ensure t)
-(define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
-(define-key evil-visual-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
-(define-key evil-normal-state-map (kbd "C-z") 'evil-numbers/dec-at-pt)
-(define-key evil-visual-state-map (kbd "C-z") 'evil-numbers/dec-at-pt)
+(define-key evil-normal-state-map (kbd "C-z a") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-z z") 'evil-numbers/dec-at-pt)
 
 ;; ace-window
 (use-package ace-window
@@ -167,7 +177,7 @@
 (use-package pdf-tools
   :ensure t)
 (pdf-tools-install)
-(setq pdf-tools-enable 1)
+(setq pdf-tools-enable t)
 
 ;; latex
 (use-package tex
@@ -227,48 +237,67 @@
   (spaceline-helm-mode 1)
   (spaceline-spacemacs-theme))
 
-;; Python environment
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; Python environment ;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; for some reason, elpy.el doesn't explicity require hideshow fixed
+;; by requiring hideshow before downloading/bytecompiling elpy.  see
+;; issue here: https://github.com/jorgenschaefer/elpy/issues/1824
+(add-hook 'python-mode-hook 'hs-minor-mode)
 (use-package elpy
   :ensure t
-  :init
-  (elpy-enable))
-
+  :config (progn (elpy-enable) (elpy-folding-hide-leafs)))
+(define-key elpy-mode-map (kbd "M-t") 'elpy-folding-toggle-at-point)
+(define-key elpy-mode-map (kbd "M-f l") 'elpy-folding-hide-leafs)
+(global-set-key (kbd "M-o") 'ace-window)
 (setq elpy-rpc-virtualenv-path 'current)
 (setq elpy-rpc-backend "jedi")
+;(defun my-elpy-hook ()
+;  (progn
+;  (hs-minor-mode)
+;  (hs-hide-level 1)))
+;(add-hook 'elpy-mode-hook #'my-elpy-hook)
 
-(defun my-hs-hide-python ()
-  (hs-minor-mode)
-  (hs-hide-level 2))
-(add-hook 'python-mode-hook #'my-hs-hide-python)
 
 ;; pyvenv
 (setenv "WORKON_HOME" "/home/jtlaune/miniconda3/envs")
 (pyvenv-workon "science")
 
+;; jupyter
 (use-package jupyter
   :ensure t
   :after (:all org python))
+
+(use-package gnuplot
+  :ensure t)
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
    (latex . t)
    (python . t)
-   (jupyter . t)))
+   (jupyter . t)
+   (gnuplot . t)))
 
 
 ;; dnd
 ;(add-to-list 'load-path "~/.emacs.d/emacs-org-dnd/")
 ;(require 'ox-dnd)
 
-;; org
+;;;;;;;;;
+;; org ;;
+;;;;;;;;;
 (use-package org
   :ensure t)
 (use-package org-contrib
   :ensure t)
+; org mode for scratch buffer
+(setq initial-major-mode 'org-mode)
 (setq org-image-actual-width '(600))
 (setq org-confirm-babel-evaluate nil)
 ;(add-hook 'org-mode-hook 'outline-minor-mode)
 ;(add-hook 'org-mode-hook 'outline-hide-body)
+(add-hook 'org-mode-hook 'org-shifttab)
 (add-hook 'org-mode-hook 'org-indent-mode)
 (add-hook 'org-mode-hook 'evil-org-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
@@ -279,6 +308,7 @@
 (ox-extras-activate '(ignore-headlines))
 (setq org-highlight-latex-and-related '(latex script entities))
 (setq org-src-fontify-natively t)
+(setq org-src-block-faces '(("jupyter-python" (:background "#000000"))))
 
 (use-package evil-org
   :ensure t
@@ -340,6 +370,10 @@
 (company-quickhelp-mode)
 (add-hook 'after-init-hook 'global-company-mode)
 
+;;;;;;;;;;;;;;;;;;;;;;;
+;; Reference Manager ;;
+;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; org-ref
 (use-package org-ref
   :ensure t)
@@ -351,15 +385,18 @@
       org-ref-default-bibliography '("~/Dropbox/bibliography/references.bib")
       org-ref-pdf-directory "~/Dropbox/bibliography/bibtex-pdfs/")
 (setq bibtex-completion-bibliography "~/Dropbox/bibliography/references.bib"
-      bibtex-completion-library-path "~/Dropbox/bibliography/bibtex-pdfs"
-      bibtex-completion-notes-path "~/Dropbox/bibliography/bibtex-notes")
+      bibtex-completion-library-path "~/Dropbox/bibliography/bibtex-pdfs/"
+      bibtex-completion-notes-path "~/Dropbox/bibliography/bibtex-notes/")
 
-;; open pdf with system pdf viewer (works on mac)
+;; open pdf with system pdf viewer
 (setq bibtex-completion-pdf-open-function
   (lambda (fpath)
-    (start-process "firefox" "*firefox*" "firefox" fpath)))
+    (start-process "evince" "*evince*" "evince" fpath)))
 ;; alternative
 ;; (setq bibtex-completion-pdf-open-function 'org-open-file)
+
+(use-package arxiv-mode
+  :ensure t)
 
 ;; BUG/WARNING: this does not find bibliography files in other
 ;; directions while in a symlinked directory. current workaround is to
@@ -375,6 +412,10 @@
                   ("\\section{%s}" . "\\section*{%s}")
                   ("\\subsection{%s}" . "\\subsection*{%s}")
                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+;;;;;;;;;;;
+;; Prose ;;
+;;;;;;;;;;;
+
 ;; focus mode
 (use-package focus
   :ensure t)
@@ -391,7 +432,9 @@
 ;(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 ;(setq scroll-step 1) ;; keyboard scroll one line at a time
 
-;; yasnippet
+;;;;;;;;;;;;;;;
+;; yasnippet ;;
+;;;;;;;;;;;;;;;
 (use-package yasnippet
   :ensure t)
 (yas-global-mode 1)
@@ -421,3 +464,11 @@
 
 (use-package rainbow-mode
   :ensure t)
+
+;; themes
+(use-package all-the-icons
+  :ensure t)
+
+(use-package sublime-themes
+  :ensure t)
+(load-theme 'junio t)

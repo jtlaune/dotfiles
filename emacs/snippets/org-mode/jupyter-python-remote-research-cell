@@ -1,8 +1,8 @@
-# -*- mode: org -*-
-# name: jupyter-python-remote-research-cell
-# key: cell
+# -*- mode: snippet -*-
+# name: psrc
+# key: <psrc
 # --
 
 #+BEGIN_SRC jupyter-python :session /jpy:localhost#8888:research
-$0
+  $0
 #+END_SRC

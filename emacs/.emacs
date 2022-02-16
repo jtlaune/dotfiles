@@ -45,19 +45,23 @@
   (interactive)
   (kill-new (random-5-letter-string)))
 
+; TODO
+;(defun goto-bibtex-buffer-or-start-one 
+
 ;; global keybindings
 (global-set-key (kbd "M-o") 'ace-window)
 (global-set-key (kbd "M-r") 'isearch-backward-regexp)
 (global-set-key (kbd "M-s") 'isearch-forward-regexp)
 (global-set-key (kbd "M-l") 'linum-mode)
-(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-c g") 'magit-status)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c s s") 'org-download-screenshot)
+(global-set-key (kbd "C-c s s") 'org-screenshot-take)
 (global-set-key (kbd "C-c C-y") 'term-paste)
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c x r") 'eval-buffer)
 (global-set-key (kbd "C-c r b") 'revert-buffer)
+(global-set-key (kbd "C-c b") 'helm-bibtex)
 
 ;; bigger initial size
 ;(add-to-list 'initial-frame-alist '(height . 30))

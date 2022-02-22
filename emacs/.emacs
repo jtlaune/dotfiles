@@ -20,9 +20,29 @@
 (add-to-list 'default-frame-alist '(tool-bar-lines . 0))
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (menu-bar-mode -1)
+(global-linum-mode 0) ;; really messed up pdf-view for some reason
 
 ;; custom functions
 ;;(defun ...
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Full width comment box                                                 ;;
+;; from http://irreal.org/blog/?p=374                                     ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun bjm-comment-box (b e)
+"Draw a box comment around the region but arrange for the region
+to extend to at least the fill column.  Place the point after the
+comment box."
+(interactive "r")
+(let ((e (copy-marker e t)))
+  (goto-char b)
+  (end-of-line)
+  (insert-char ?  (- fill-column (current-column)))
+  (comment-box b e 1)
+  (goto-char e)
+  (set-marker e nil)))
+
 (defun my-file-contents (file)
   (with-temp-buffer
     (insert-file-contents file)
@@ -58,6 +78,7 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c x r") 'eval-buffer)
 (global-set-key (kbd "C-c r b") 'revert-buffer)
+(global-set-key (kbd "C-c b b") 'bjm-comment-box)
 
 ;; bigger initial size
 ;(add-to-list 'initial-frame-alist '(height . 30))
@@ -120,6 +141,7 @@
 (use-package evil-collection
   :ensure t)
 (evil-collection-init)
+(evil-set-initial-state 'arxiv-mode 'emacs)
 
 ;; more evil
 (use-package evil-numbers
@@ -178,6 +200,8 @@
   :ensure t)
 (pdf-tools-install)
 (setq pdf-tools-enable t)
+
+(add-hook 'pdf-view-mode-hook 'pdf-tools-enable-minor-modes)
 
 ;; latex
 (use-package tex
@@ -240,6 +264,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python environment ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
+;; pyvenv
+(setenv "WORKON_HOME" "/home/jtlaune/miniconda3/envs")
+(pyvenv-workon "science")
+
 ;; for some reason, elpy.el doesn't explicity require hideshow fixed
 ;; by requiring hideshow before downloading/bytecompiling elpy.  see
 ;; issue here: https://github.com/jorgenschaefer/elpy/issues/1824
@@ -247,8 +275,11 @@
 (use-package elpy
   :ensure t
   :config (progn (elpy-enable) (elpy-folding-hide-leafs)))
-(define-key elpy-mode-map (kbd "M-t") 'elpy-folding-toggle-at-point)
+(define-key elpy-mode-map (kbd "M-f t") 'elpy-folding-toggle-at-point)
 (define-key elpy-mode-map (kbd "M-f l") 'elpy-folding-hide-leafs)
+(define-key elpy-mode-map (kbd "M-f a") 'hs-hide-all)
+(define-key elpy-mode-map (kbd "M-f s") 'hs-show-all)
+(define-key elpy-mode-map (kbd "M-f n") 'flycheck-next-error)
 (global-set-key (kbd "M-o") 'ace-window)
 (setq elpy-rpc-virtualenv-path 'current)
 (setq elpy-rpc-backend "jedi")
@@ -258,10 +289,15 @@
 ;  (hs-hide-level 1)))
 ;(add-hook 'elpy-mode-hook #'my-elpy-hook)
 
+;; flycheck
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
 
-;; pyvenv
-(setenv "WORKON_HOME" "/home/jtlaune/miniconda3/envs")
-(pyvenv-workon "science")
+;; Use flycheck instead of flymake
+(when (load "flycheck" t t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 ;; jupyter
 (use-package jupyter
@@ -308,7 +344,9 @@
 (ox-extras-activate '(ignore-headlines))
 (setq org-highlight-latex-and-related '(latex script entities))
 (setq org-src-fontify-natively t)
-(setq org-src-block-faces '(("jupyter-python" (:background "#000000"))))
+(setq org-src-block-faces
+'(("jupyter-python" (:background "#000000"
+:font "FantasqueSansMono Nerd Font Mono 14"))))
 
 (use-package evil-org
   :ensure t
@@ -325,6 +363,17 @@
   (interactive "nChapters count: ")
   (dolist (n (number-sequence 1 count))
     (insert (format "- [ ] problem %d\n" n))))
+
+(use-package org-roam
+  :ensure t
+  :after org)
+(setq org-roam-directory (file-truename "~/sdd/Dropbox/org/"))
+
+;;;;;;;;;;;;;;;
+;; Text Mode ;;
+;;;;;;;;;;;;;;;
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
 
 ;; agenda configuration
 (setq org-agenda-sticky 't)
@@ -389,9 +438,8 @@
       bibtex-completion-notes-path "~/Dropbox/bibliography/bibtex-notes/")
 
 ;; open pdf with system pdf viewer
-(setq bibtex-completion-pdf-open-function
-  (lambda (fpath)
-    (start-process "evince" "*evince*" "evince" fpath)))
+(setq bibtex-completion-pdf-open-function 'find-file-other-frame)
+
 ;; alternative
 ;; (setq bibtex-completion-pdf-open-function 'org-open-file)
 
@@ -469,6 +517,24 @@
 (use-package all-the-icons
   :ensure t)
 
-(use-package sublime-themes
-  :ensure t)
-(load-theme 'junio t)
+;(use-package sublime-themes
+;  :ensure t)
+;(load-theme 'junio t)
+
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-vibrant t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))

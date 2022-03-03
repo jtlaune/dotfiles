@@ -25,6 +25,10 @@
 ;; custom functions
 ;;(defun ...
 
+(defun insert-problems-todo (count)
+  (interactive "nChapters count: ")
+  (dolist (n (number-sequence 1 count))
+    (insert (format "- [ ] problem %d\n" n))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Full width comment box                                                 ;;
@@ -233,6 +237,8 @@ comment box."
   :ensure t)
 (auctex-latexmk-setup)
 
+;; check out texfrag
+
 ;; outline-magic
 ;(use-package outline-magic
 ;  :ensure t)
@@ -361,16 +367,22 @@ comment box."
 ;; org keybindings
 (define-key org-mode-map (kbd "C-c C-l") 'org-insert-last-stored-link)
 
-;; helper functions
-(defun insert-problems-todo (count)
-  (interactive "nChapters count: ")
-  (dolist (n (number-sequence 1 count))
-    (insert (format "- [ ] problem %d\n" n))))
-
 (use-package org-roam
   :ensure t
   :after org)
-(setq org-roam-directory (file-truename "~/sdd/Dropbox/org/"))
+(setq org-roam-directory (file-truename "~/org/"))
+(org-roam-db-autosync-mode)
+(setq org-roam-dailies-directory "dailies")
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         "* %?"
+         :target (file+head "%<%Y-%m-%d>.org"
+                            "#+title: %<%Y-%m-%d>\n"))))
+
+; should set up in the future
+;(use-package org-roam-bibtex
+;  :ensure t
+;  :after org)
 
 ;;;;;;;;;;;;;;;
 ;; Text Mode ;;
@@ -381,7 +393,7 @@ comment box."
 ;; agenda configuration
 (setq org-agenda-sticky 't)
 (setq org-agenda-files
-      (list "~/Dropbox/org" "~/multi-planet-architecture/notes"))
+      (list "~/org"))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 (setq org-use-fast-todo-selection 1)
 ;(setq org-capture-templates

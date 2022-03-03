@@ -191,9 +191,7 @@ for_window [class="Eog"] floating enable
 for_window [class="Gscreenshot"] floating enable
 
 # all windows start floating for these WS
-for_window [workspace="1"] floating enable
-for_window [workspace="2"] floating enable
-for_window [workspace="3"] floating enable
+for_window [workspace="5"] floating enable
 
 # Start polybar & other useful startup programs.
 # Keeping this local to WM configs so I can have
@@ -202,6 +200,7 @@ for_window [workspace="3"] floating enable
 exec --no-startup-id polybar example
 exec --no-startup-id dropbox start
 exec --no-startup-id redshift-gtk
+exec --no-startup-id gitea web
 exec --no-startup-id emacs --daemon
 exec --no-startup-id feh --bg-fill ~/dotfiles/wallpapers/paintsplash.png
 exec_always --no-startup-id xset s 300

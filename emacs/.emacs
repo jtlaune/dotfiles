@@ -441,16 +441,16 @@ comment box."
 ;; org-ref
 (use-package org-ref
   :ensure t)
-(setq reftex-default-bibliography '("~/Dropbox/bibliography/references.bib"))
+(setq reftex-default-bibliography '("~/bibliography/references.bib"))
 ;; pre and post text in citations
 (setf (cdr (assoc 'org-mode bibtex-completion-format-citation-functions)) 'org-ref-format-citation)
 ;; see org-ref for use of these variables
-(setq org-ref-bibliography-notes "~/Dropbox/bibliography/notes.org"
-      org-ref-default-bibliography '("~/Dropbox/bibliography/references.bib")
-      org-ref-pdf-directory "~/Dropbox/bibliography/bibtex-pdfs/")
-(setq bibtex-completion-bibliography "~/Dropbox/bibliography/references.bib"
-      bibtex-completion-library-path "~/Dropbox/bibliography/bibtex-pdfs/"
-      bibtex-completion-notes-path "~/Dropbox/bibliography/bibtex-notes/")
+(setq org-ref-bibliography-notes "~/bibliography/notes.org"
+      org-ref-default-bibliography '("~/bibliography/references.bib")
+      org-ref-pdf-directory "~/bibliography/bibtex-pdfs/")
+(setq bibtex-completion-bibliography "~/bibliography/references.bib"
+      bibtex-completion-library-path "~/bibliography/bibtex-pdfs/"
+      bibtex-completion-notes-path "~/bibliography/bibtex-notes/")
 
 ;; open pdf with system pdf viewer
 (setq bibtex-completion-pdf-open-function 'find-file-other-frame)

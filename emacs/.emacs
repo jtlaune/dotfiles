@@ -25,6 +25,14 @@
 ;; custom functions
 ;;(defun ...
 
+(defun unfill-region (beg end)
+  "Unfill the region, joining text paragraphs into a single
+    logical line.  This is useful, e.g., for use with
+    `visual-line-mode'."
+  (interactive "*r")
+  (let ((fill-column (point-max)))
+    (fill-region beg end)))
+
 (defun insert-problems-todo (count)
   (interactive "nChapters count: ")
   (dolist (n (number-sequence 1 count))
@@ -326,8 +334,11 @@ comment box."
 
 
 ;; dnd
-;(add-to-list 'load-path "~/.emacs.d/emacs-org-dnd/")
+;; THIS PACKAGE DOES NOT WORK. DO NOT WASTE ANY MORE TIME ON THIS STUPID PIECE OF SHIT.
 ;(require 'ox-dnd)
+(use-package org-d20
+  :ensure t
+  :after org)
 
 ;;;;;;;;;
 ;; org ;;
@@ -348,8 +359,8 @@ comment box."
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 4))
-(eval-after-load 'org (add-to-list 'org-latex-packages-alist '("" "amsmath" t)))
-(eval-after-load 'org (add-to-list 'org-latex-packages-alist '("" "tensor" t)))
+(add-to-list 'org-latex-packages-alist '("" "amsmath" t))
+(add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)
 (require 'ox-extra)
 (ox-extras-activate '(ignore-headlines))
@@ -366,9 +377,6 @@ comment box."
 (require 'evil-org-agenda)
 (evil-org-agenda-set-keys)
 
-;; org keybindings
-(define-key org-mode-map (kbd "C-c C-l") 'org-insert-last-stored-link)
-
 (use-package org-roam
   :ensure t
   :after org)
@@ -380,6 +388,13 @@ comment box."
          "* %?"
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d>\n"))))
+
+;; org keybindings
+(define-key org-mode-map (kbd "C-c C-l") 'org-insert-last-stored-link)
+(define-key org-mode-map (kbd "M-r M-f") 'org-roam-node-find)
+(define-key org-mode-map (kbd "M-r M-i") 'org-roam-node-insert)
+(define-key org-mode-map (kbd "M-[") 'org-ref-insert-cite-link)
+
 
 ; should set up in the future
 ;(use-package org-roam-bibtex

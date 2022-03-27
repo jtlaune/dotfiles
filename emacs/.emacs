@@ -358,7 +358,7 @@ comment box."
 (add-hook 'org-mode-hook 'evil-org-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 4))
 (add-to-list 'org-latex-packages-alist '("" "amsmath" t))
 (add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)

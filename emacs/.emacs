@@ -77,6 +77,11 @@ comment box."
   (interactive)
   (kill-new (random-5-letter-string)))
 
+(defun my/disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil))))
+
 ; TODO
 ;(defun goto-bibtex-buffer-or-start-one 
 
@@ -103,12 +108,6 @@ comment box."
 ;; central save files
 (setq backup-directory-alist `(("." . "~/.saves")))
 
-(defun my/disable-scroll-bars (frame)
-  (modify-frame-parameters frame
-                           '((vertical-scroll-bars . nil)
-                             (horizontal-scroll-bars . nil))))
-(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
-
 ;; give me my nice margins
 ;;(set-frame-parameter nil 'internal-border-width 12)
 (add-to-list 'default-frame-alist '(internal-border-width . 12))
@@ -122,6 +121,7 @@ comment box."
  select-enable-clipboard t       ; Merge system's and Emacs' clipboard
  cursor-type '(bar . 5)          ; set cursor type to bar
  line-spacing 4)                 ; line spacing
+(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
 ;; term
 (setq explicit-shell-filename "/bin/bash")
@@ -389,6 +389,30 @@ comment box."
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d>\n"))))
 
+;; https://github.com/bdarcus/citar#installation This package provides
+;; a completing-read front-end to browse and act on BibTeX, BibLaTeX,
+;; and CSL JSON bibliographic data, and LaTeX, markdown, and org-cite
+;; editing support.
+(use-package citar
+  :ensure t
+  :custom (citar-biography '("~/bibliography/references.bib")))
+
+;; ORB Org Roam Bibtex
+;; https://github.com/org-roam/org-roam-bibtex
+
+;; Org Roam BibTeX (ORB) is an Org Roam extension that integrates Org
+;; Roam with bibliography/citation management software: Org Ref, Helm
+;; and Ivy BibTeX and Citar.
+
+;; ORB needs https://github.com/inukshuk/anystyle-cli
+;; AnyStyle.io, available as a ruby gem. need to set this up on your
+;; system to use https://github.com/org-roam/org-roam-bibtex#orb-anystyle
+
+(use-package org-roam-bibtex
+  :ensure t
+  :after org-roam
+  :config (require 'org-ref))
+
 ;; org keybindings
 (define-key org-mode-map (kbd "C-c C-l") 'org-insert-last-stored-link)
 (define-key org-mode-map (kbd "M-r M-f") 'org-roam-node-find)
@@ -559,7 +583,7 @@ comment box."
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-vibrant t)
+  (load-theme 'doom-rouge t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)

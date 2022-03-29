@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: latex_cases
+# key: <lc
+# --
+\begin{cases}
+  $0 & \\
+\end{cases}

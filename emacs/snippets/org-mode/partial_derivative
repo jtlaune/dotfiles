@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: partial derivative
+# key: <dd
+# --
+\frac{\partial $0}{\partial }

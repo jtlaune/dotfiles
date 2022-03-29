@@ -121,6 +121,7 @@ comment box."
  select-enable-clipboard t       ; Merge system's and Emacs' clipboard
  cursor-type '(bar . 5)          ; set cursor type to bar
  line-spacing 4)                 ; line spacing
+
 (add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
 ;; term
@@ -353,12 +354,13 @@ comment box."
 (setq org-confirm-babel-evaluate nil)
 ;(add-hook 'org-mode-hook 'outline-minor-mode)
 ;(add-hook 'org-mode-hook 'outline-hide-body)
+(add-hook 'org-mode-hook 'org-roam-bibtex-mode)
 (add-hook 'org-mode-hook 'org-shifttab)
 (add-hook 'org-mode-hook 'org-indent-mode)
 (add-hook 'org-mode-hook 'evil-org-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 4))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.))
 (add-to-list 'org-latex-packages-alist '("" "amsmath" t))
 (add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)
@@ -369,6 +371,7 @@ comment box."
 (setq org-src-block-faces
 '(("jupyter-python" (:background "#000000"
 :font "FantasqueSansMono Nerd Font Mono 14"))))
+(setq org-src-window-setup 'current-window)
 
 (use-package evil-org
   :ensure t
@@ -418,6 +421,7 @@ comment box."
 (define-key org-mode-map (kbd "M-r M-f") 'org-roam-node-find)
 (define-key org-mode-map (kbd "M-r M-i") 'org-roam-node-insert)
 (define-key org-mode-map (kbd "M-[") 'org-ref-insert-cite-link)
+(define-key org-mode-map (kbd "M-{") 'org-ref-insert-cite-link)
 
 
 ; should set up in the future

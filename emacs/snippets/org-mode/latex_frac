@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: latex_frac
+# key: <lf
+# --
+\frac{$2}{$1} $0

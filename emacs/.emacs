@@ -423,11 +423,13 @@ comment box."
 (define-key org-mode-map (kbd "M-[") 'org-ref-insert-cite-link)
 (define-key org-mode-map (kbd "M-{") 'org-ref-insert-cite-link)
 
+;; link to magit buffers
+(use-package orgit
+  :ensure t)
 
-; should set up in the future
-;(use-package org-roam-bibtex
-;  :ensure t
-;  :after org)
+;; pomodoro timer
+(use-package org-pomodoro
+  :ensure t)
 
 ;;;;;;;;;;;;;;;
 ;; Text Mode ;;

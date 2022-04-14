@@ -389,7 +389,7 @@ comment box."
 (add-hook 'org-mode-hook 'evil-org-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 4.))
 (add-to-list 'org-latex-packages-alist '("" "amsmath" t))
 (add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)
@@ -398,8 +398,7 @@ comment box."
 (setq org-highlight-latex-and-related '(latex script entities))
 (setq org-src-fontify-natively t)
 (setq org-src-block-faces
-'(("jupyter-python" (:background "#000000"
-:font "FantasqueSansMono Nerd Font Mono 14"))))
+'(("jupyter-python" (:font "FantasqueSansMono Nerd Font Mono 14"))))
 (setq org-src-window-setup 'current-window)
 
 (use-package evil-org
@@ -618,15 +617,16 @@ comment box."
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-rouge t)
+  ;(load-theme 'doom-rouge t)
+  (load-theme 'doom-one-light t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (all-the-icons must be installed!)
   (doom-themes-neotree-config)
   ;; or for treemacs users
-  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-  (doom-themes-treemacs-config)
+  ;(setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  ;(doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 

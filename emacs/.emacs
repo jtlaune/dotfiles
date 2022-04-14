@@ -25,6 +25,35 @@
 ;; custom functions
 ;;(defun ...
 
+;; can't get to work
+;; original
+;; https://stackoverflow.com/questions/68294544/function-to-explode-paragraph-into-org-bullets-by-sentences
+;;(defun explode-paragraph ()
+;;  "Explode paragraph. If run twice it changes list marker."
+;;  (interactive)
+;;  (save-mark-and-excursion
+;;    (let ((bop (copy-marker (progn (backward-paragraph) (1+ (point)))))
+;;          (eop (copy-marker (progn (forward-paragraph)  (point)))))
+;;      (goto-char bop)
+;;      (if (looking-at-p "^\s*[\-\+x] ") nil (insert "+ "))
+;;      (while (< (point) eop)
+;;        (forward-sentence)
+;;        (forward-whitespace 1)
+;;        (unless (>= (point) eop)
+;;          (org-meta-return))))))
+;; reasonable replacement
+;; https://stackoverflow.com/questions/43352006/split-lines-of-current-paragraph-in-emacs
+(defun p2l ()
+  "Format current paragraph into single lines."
+  (interactive "*")
+  (save-excursion
+    (forward-paragraph)
+    (let ((foo (point)))
+      (backward-paragraph)
+      (replace-regexp "\n" " " nil (1+ (point)) foo)
+      (backward-paragraph)
+      (replace-regexp "\\.  ?" ".\n" nil (point) foo))))
+
 (defun unfill-region (beg end)
   "Unfill the region, joining text paragraphs into a single
     logical line.  This is useful, e.g., for use with
@@ -600,3 +629,7 @@ comment box."
   (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
+
+;; https://github.com/spotify/dockerfile-mode
+(use-package dockerfile-mode
+  :ensure t)

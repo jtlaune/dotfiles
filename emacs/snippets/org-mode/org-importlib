@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: org-importlib
+# key: <importlib
+# --
+#+BEGIN_SRC jupyter-python :session /jpy:localhost#8888:research
+  import importlib
+  importlib.reload($1)
+#+END_SRC$0

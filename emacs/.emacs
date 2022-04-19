@@ -249,7 +249,7 @@ comment box."
 (add-hook 'pdf-view-mode-hook 'pdf-tools-enable-minor-modes)
 
 ;; latex
-(use-package tex
+(use-package latex
   :ensure auctex)
 (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
 (setq TeX-source-correlate-method
@@ -271,9 +271,10 @@ comment box."
 (add-hook 'LaTeX-mode-hook 'outline-minor-mode)
 (add-hook 'LaTeX-mode-hook 'outline-hide-body)
 
-(use-package auctex-latexmk
-  :ensure t)
-(auctex-latexmk-setup)
+; recently started throwing startup errors after an update. not sure why. disabling to see where if breaks stuff.
+;(use-package auctex-latexmk
+;  :ensure t)
+;(auctex-latexmk-setup)
 
 ;; check out texfrag
 
@@ -299,14 +300,14 @@ comment box."
 ;; after reinstalling
 ;; spaceline
 (use-package spaceline
-  :ensure t
-  :config
-  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
-(use-package spaceline-config
-  :ensure spaceline
-  :config
-  (spaceline-helm-mode 1)
-  (spaceline-spacemacs-theme))
+  :ensure t)
+(spaceline-emacs-theme)
+;(require spaceline-config)
+;(use-package spaceline-config
+;  :ensure spaceline
+;  :config
+;  (spaceline-helm-mode 1)
+;  (spaceline-spacemacs-theme))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python environment ;;
@@ -351,6 +352,9 @@ comment box."
   :ensure t
   :after (:all org python))
 
+(setq native-comp-deferred-compilation t
+            native-comp-deferred-compilation-deny-list '("jupyter" "zmq"))
+
 (use-package gnuplot
   :ensure t)
 
@@ -389,7 +393,7 @@ comment box."
 (add-hook 'org-mode-hook 'evil-org-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 4.))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.))
 (add-to-list 'org-latex-packages-alist '("" "amsmath" t))
 (add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)

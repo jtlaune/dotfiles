@@ -251,7 +251,9 @@ comment box."
 
 (add-hook 'pdf-view-mode-hook 'pdf-tools-enable-minor-modes)
 
-;; latex
+;;;;;;;;;;;
+;; LaTex ;;
+;;;;;;;;;;;
 (use-package latex
   :ensure auctex)
 (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
@@ -273,6 +275,9 @@ comment box."
 (setq reftex-plug-into-AUCTeX t)
 (add-hook 'LaTeX-mode-hook 'outline-minor-mode)
 (add-hook 'LaTeX-mode-hook 'outline-hide-body)
+
+;; latex src block previews
+(setq exec-path (append exec-path '("/usr/bin/")))
 
 ; recently started throwing startup errors after an update. not sure why. disabling to see where if breaks stuff.
 ;(use-package auctex-latexmk
@@ -559,6 +564,7 @@ comment box."
                   ("\\section{%s}" . "\\section*{%s}")
                   ("\\subsection{%s}" . "\\subsection*{%s}")
                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+
 ;;;;;;;;;;;
 ;; Prose ;;
 ;;;;;;;;;;;

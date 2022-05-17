@@ -21,6 +21,8 @@
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (menu-bar-mode -1)
 (global-linum-mode 0) ;; really messed up pdf-view for some reason
+;; relative line numbers?
+(setq display-line-numbers 'relative)
 
 ;; custom functions
 ;;(defun ...
@@ -128,6 +130,7 @@ comment box."
 (global-set-key (kbd "C-c x r") 'eval-buffer)
 (global-set-key (kbd "C-c r b") 'revert-buffer)
 (global-set-key (kbd "C-c b") 'helm-bibtex)
+(global-set-key (kbd "C-x b") 'ibuffer)
 
 ;; bigger initial size
 ;(add-to-list 'initial-frame-alist '(height . 30))
@@ -191,8 +194,8 @@ comment box."
 ;; more evil
 (use-package evil-numbers
   :ensure t)
-(define-key evil-normal-state-map (kbd "C-z a") 'evil-numbers/inc-at-pt)
-(define-key evil-normal-state-map (kbd "C-z z") 'evil-numbers/dec-at-pt)
+(define-key evil-normal-state-map (kbd "+") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "-") 'evil-numbers/dec-at-pt)
 
 ;; ace-window
 (use-package ace-window
@@ -391,9 +394,11 @@ comment box."
 (add-hook 'org-mode-hook 'org-shifttab)
 (add-hook 'org-mode-hook 'org-indent-mode)
 (add-hook 'org-mode-hook 'evil-org-mode)
+(add-hook 'org-mode-hook 'linum-mode)
+(add-hook 'org-mode-hook 'hl-line-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 4.))
 (add-to-list 'org-latex-packages-alist '("" "amsmath" t))
 (add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)
@@ -637,3 +642,119 @@ comment box."
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
   :ensure t)
+
+;;;;;;;;;;;;;;
+;; treemacs ;;
+;;;;;;;;;;;;;;
+(use-package treemacs
+  :ensure t)
+
+;;;;;;;;;;;;;
+;; ibuffer ;;
+;;;;;;;;;;;;;
+(use-package ibuffer-project
+  :ensure t)
+(add-hook 'ibuffer-hook
+  (lambda ()
+    (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))))
+(custom-set-variables
+ '(ibuffer-formats
+   '((mark modified read-only locked " "
+           (name 18 18 :left :elide)
+           " "
+           (size 9 -1 :right)
+           " "
+           (mode 16 16 :left :elide)
+           " " project-file-relative))))
+;;;;;;;;;;;;;
+;; vertico ;;
+;;;;;;;;;;;;;
+
+;; Enable vertico
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode)
+
+  ;; Different scroll margin
+  ;; (setq vertico-scroll-margin 0)
+
+  ;; Show more candidates
+  ;; (setq vertico-count 20)
+
+  ;; Grow and shrink the Vertico minibuffer
+  ;; (setq vertico-resize t)
+
+  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+  ;; (setq vertico-cycle t)
+  )
+
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t))
+
+;;;;;;;;;;;;;;;;
+;; marginalia ;;
+;;;;;;;;;;;;;;;;
+(use-package marginalia
+  :ensure t
+  :init (marginalia-mode)
+  )
+
+;;;;;;;;;;;
+;; hydra ;;
+;;;;;;;;;;;
+(use-package hydra
+  :ensure t)
+
+;;;;;;;;;;;;
+;; embark ;;
+;;;;;;;;;;;;
+(use-package embark
+  :ensure t
+
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))

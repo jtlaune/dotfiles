@@ -764,3 +764,19 @@ comment box."
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none)))))
+
+;;;;;;;;;;;;;;;
+;; orderless ;;
+;;;;;;;;;;;;;;;
+
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+;;;;;;;;;;;;;
+;; consult ;;
+;;;;;;;;;;;;;
+;; Example configuration for Consult at
+;; https://github.com/minad/consult

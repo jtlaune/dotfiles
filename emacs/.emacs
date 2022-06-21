@@ -672,6 +672,9 @@ comment box."
            " "
            (mode 16 16 :left :elide)
            " " project-file-relative))))
+
+(evil-set-initial-state 'ibuffer-mode 'emacs)
+
 ;;;;;;;;;;;;;
 ;; vertico ;;
 ;;;;;;;;;;;;;

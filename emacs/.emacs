@@ -403,7 +403,7 @@ comment box."
 (add-hook 'org-mode-hook 'hl-line-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 4.))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.))
 (add-to-list 'org-latex-packages-alist '("" "amsmath" t))
 (add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)
@@ -783,3 +783,24 @@ comment box."
 ;;;;;;;;;;;;;
 ;; Example configuration for Consult at
 ;; https://github.com/minad/consult
+
+;;;;;;;;;
+;; C++ ;;
+;;;;;;;;;
+(use-package irony
+  :ensure t)
+
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+(use-package company-irony
+  :ensure t)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
+
+(use-package flycheck-irony
+  :ensure t)
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))

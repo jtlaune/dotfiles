@@ -17,6 +17,13 @@
 
 ;; have to use default-frame-alist for daemon emacs
 (add-to-list 'default-frame-alist '(font . "Iosevka Term Slab 12"))
+(set-face-attribute 'default nil :family "Iosevka Term Slab 12")
+(set-face-attribute 'fixed-pitch nil :family "Iosevka Term Slab 12")
+(set-face-attribute 'variable-pitch nil :family "IBM Plex Serif")
+(use-package mixed-pitch
+  :ensure t
+  :hook (text-mode . mixed-pitch-mode))
+
 (add-to-list 'default-frame-alist '(tool-bar-lines . 0))
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (menu-bar-mode -1)
@@ -24,27 +31,9 @@
 ;; relative line numbers?
 (setq display-line-numbers 'relative)
 
-;; custom functions
-;;(defun ...
-
-;; can't get to work
-;; original
-;; https://stackoverflow.com/questions/68294544/function-to-explode-paragraph-into-org-bullets-by-sentences
-;;(defun explode-paragraph ()
-;;  "Explode paragraph. If run twice it changes list marker."
-;;  (interactive)
-;;  (save-mark-and-excursion
-;;    (let ((bop (copy-marker (progn (backward-paragraph) (1+ (point)))))
-;;          (eop (copy-marker (progn (forward-paragraph)  (point)))))
-;;      (goto-char bop)
-;;      (if (looking-at-p "^\s*[\-\+x] ") nil (insert "+ "))
-;;      (while (< (point) eop)
-;;        (forward-sentence)
-;;        (forward-whitespace 1)
-;;        (unless (>= (point) eop)
-;;          (org-meta-return))))))
-;; reasonable replacement
-;; https://stackoverflow.com/questions/43352006/split-lines-of-current-paragraph-in-emacs
+;;;;;;;;;;;;;;;;;;;;;;
+;; custom functions ;;
+;;;;;;;;;;;;;;;;;;;;;;
 (defun p2l ()
   "Format current paragraph into single lines."
   (interactive "*")
@@ -69,10 +58,8 @@
   (dolist (n (number-sequence 1 count))
     (insert (format "- [ ] problem %d\n" n))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Full width comment box                                                 ;;
-;; from http://irreal.org/blog/?p=374                                     ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Full width comment box
+;; from http://irreal.org/blog/?p=374
 (defun bjm-comment-box (b e)
 "Draw a box comment around the region but arrange for the region
 to extend to at least the fill column.  Place the point after the
@@ -113,9 +100,6 @@ comment box."
                            '((vertical-scroll-bars . nil)
                              (horizontal-scroll-bars . nil))))
 
-; TODO
-;(defun goto-bibtex-buffer-or-start-one 
-
 ;; global keybindings
 (global-set-key (kbd "M-o") 'ace-window)
 (global-set-key (kbd "M-r") 'isearch-backward-regexp)
@@ -130,7 +114,7 @@ comment box."
 (global-set-key (kbd "C-c x r") 'eval-buffer)
 (global-set-key (kbd "C-c r b") 'revert-buffer)
 (global-set-key (kbd "C-c b") 'helm-bibtex)
-(global-set-key (kbd "C-x b") 'ibuffer)
+;(global-set-key (kbd "C-x b") 'ibuffer)
 
 ;; bigger initial size
 ;(add-to-list 'initial-frame-alist '(height . 30))
@@ -297,26 +281,6 @@ comment box."
 ;        ("%paragraph" 5)))
 ;(define-key outline-minor-mode-map (kbd "<C-tab>") 'outline-cycle)
 
-;; powerline
-(use-package powerline
-  :ensure t
-  :config
-  (powerline-default-theme))
-
-
-;; for some reason spaceline is throwing startup errors even
-;; after reinstalling
-;; spaceline
-(use-package spaceline
-  :ensure t)
-(spaceline-emacs-theme)
-;(require spaceline-config)
-;(use-package spaceline-config
-;  :ensure spaceline
-;  :config
-;  (spaceline-helm-mode 1)
-;  (spaceline-spacemacs-theme))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Language Server Protocol (lsp-mode) ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -395,9 +359,10 @@ comment box."
 (setq lsp-jedi-workspace-extra-paths
   (vconcat lsp-jedi-workspace-extra-paths
            ["/home/jtlaune/miniconda3/envs/science/lib/python3.9/site-packages"]))
-;; dnd
-;; THIS PACKAGE DOES NOT WORK. DO NOT WASTE ANY MORE TIME ON THIS STUPID PIECE OF SHIT.
-;(require 'ox-dnd)
+
+;;;;;;;;;
+;; dnd ;;
+;;;;;;;;;
 (use-package org-d20
   :ensure t
   :after org)
@@ -409,6 +374,8 @@ comment box."
   :ensure t)
 (use-package org-contrib
   :ensure t)
+(use-package org-modern
+  :ensure t)
 ; org mode for scratch buffer
 (setq initial-major-mode 'org-mode)
 (setq org-image-actual-width '(600))
@@ -417,7 +384,7 @@ comment box."
 ;(add-hook 'org-mode-hook 'outline-hide-body)
 (add-hook 'org-mode-hook 'org-roam-bibtex-mode)
 (add-hook 'org-mode-hook 'org-shifttab)
-(add-hook 'org-mode-hook 'org-indent-mode)
+;(add-hook 'org-mode-hook 'org-indent-mode)
 (add-hook 'org-mode-hook 'evil-org-mode)
 (add-hook 'org-mode-hook 'linum-mode)
 (add-hook 'org-mode-hook 'hl-line-mode)
@@ -497,8 +464,10 @@ comment box."
 ;;;;;;;;;;;;;;;
 ;; Text Mode ;;
 ;;;;;;;;;;;;;;;
-(dolist (hook '(text-mode-hook))
-  (add-hook hook (lambda () (flyspell-mode 1))))
+;; get an error about flyspell not finding .aff file?
+;; tried to fix to no avail. maybe just give up.
+;(dolist (hook '(text-mode-hook))
+;  (add-hook hook (lambda () (flyspell-mode 1))))
 
 ;; agenda configuration
 (setq org-agenda-sticky 't)
@@ -631,7 +600,6 @@ comment box."
 ;; README to quiet minibuffer errors
 (setq imagex-quiet-error t)
 
-
 ;; upcase region is tight
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
@@ -639,19 +607,6 @@ comment box."
 ;;;;;;;;;;;;;
 ;; theming ;;
 ;;;;;;;;;;;;;
-
-;; spaceline
-(use-package spaceline
-  :ensure t)
-(spaceline-emacs-theme)
-
-;; Add some visual flair to the modeline enhancements
-(use-package spaceline-all-the-icons
-  :ensure t
-  :after spaceline
-  :config (spaceline-all-the-icons-theme)
-  (spaceline-all-the-icons--setup-neotree))
-
 (use-package rainbow-mode
   :ensure t)
 
@@ -659,43 +614,26 @@ comment box."
 (use-package all-the-icons
   :ensure t)
 
-;(use-package sublime-themes
-;  :ensure t)
-;(load-theme 'junio t)
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
 
-;(use-package doom-themes
-;  :ensure t
-;  :config
-;  ;; Global settings (defaults)
-;  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-;        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-;  ;(load-theme 'doom-rouge t)
-;  (load-theme 'doom-one t)
-;
-;  ;; Enable flashing mode-line on errors
-;  (doom-themes-visual-bell-config)
-;  ;; Enable custom neotree theme (all-the-icons must be installed!)
-;  (doom-themes-neotree-config)
-;  ;; or for treemacs users
-;  ;(setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-;  ;(doom-themes-treemacs-config)
-;  ;; Corrects (and improves) org-mode's native fontification.
-;  (doom-themes-org-config))
+(use-package leuven-theme
+  :ensure t
+  :config
+  (load-theme 'leuven t))
+
+(use-package svg-tag-mode
+  :ensure t)
+(setq svg-tag-tags
+      '((":PROPERTIES:" . ((lambda (tag) (svg-tag-make "PROPERTIES"))))))
+(setq svg-tag-tags
+      '(("#+RESULTS:" . ((lambda (tag) (svg-tag-make "RESULTS"))))))
+(global-svg-tag-mode)
 
 ;;;;;;;;;;;;
 ;; docker ;;
 ;;;;;;;;;;;;
-;
-;(use-package solaire-mode
-;  :ensure t)
-;(solaire-global-mode +1)
-
-(use-package catppuccin-theme
-  :ensure t
-  :config
-  (setq catppuccin-height-title1 1.5))
-(load-theme 'catppuccin)
-
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
   :ensure t)
@@ -709,22 +647,22 @@ comment box."
 ;;;;;;;;;;;;;
 ;; ibuffer ;;
 ;;;;;;;;;;;;;
-(use-package ibuffer-project
-  :ensure t)
-(add-hook 'ibuffer-hook
-  (lambda ()
-    (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))))
-(custom-set-variables
- '(ibuffer-formats
-   '((mark modified read-only locked " "
-           (name 18 18 :left :elide)
-           " "
-           (size 9 -1 :right)
-           " "
-           (mode 16 16 :left :elide)
-           " " project-file-relative))))
-
-(evil-set-initial-state 'ibuffer-mode 'emacs)
+;(use-package ibuffer-project
+;  :ensure t)
+;(add-hook 'ibuffer-hook
+;  (lambda ()
+;    (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))))
+;(custom-set-variables
+; '(ibuffer-formats
+;   '((mark modified read-only locked " "
+;           (name 18 18 :left :elide)
+;           " "
+;           (size 9 -1 :right)
+;           " "
+;           (mode 16 16 :left :elide)
+;           " " project-file-relative))))
+;
+;(evil-set-initial-state 'ibuffer-mode 'emacs)
 
 ;;;;;;;;;;;;;
 ;; vertico ;;

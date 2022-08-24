@@ -16,7 +16,7 @@
 
 
 ;; have to use default-frame-alist for daemon emacs
-(add-to-list 'default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 14"))
+(add-to-list 'default-frame-alist '(font . "Iosevka Term Slab 12"))
 (add-to-list 'default-frame-alist '(tool-bar-lines . 0))
 (add-to-list 'default-frame-alist '(vertical-scroll-bars . nil))
 (menu-bar-mode -1)
@@ -297,43 +297,73 @@ comment box."
 ;        ("%paragraph" 5)))
 ;(define-key outline-minor-mode-map (kbd "<C-tab>") 'outline-cycle)
 
+;; powerline
+(use-package powerline
+  :ensure t
+  :config
+  (powerline-default-theme))
+
+
+;; for some reason spaceline is throwing startup errors even
+;; after reinstalling
+;; spaceline
+(use-package spaceline
+  :ensure t)
+(spaceline-emacs-theme)
+;(require spaceline-config)
+;(use-package spaceline-config
+;  :ensure spaceline
+;  :config
+;  (spaceline-helm-mode 1)
+;  (spaceline-spacemacs-theme))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Language Server Protocol (lsp-mode) ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package lsp-mode
+  :ensure t
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (python-mode . lsp)
+         (c++-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp
+  )
+
+;; optionally
+(use-package lsp-ui :ensure t :commands lsp-ui-mode)
+;; if you are helm user
+(use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
+;; if you are ivy user
+(use-package lsp-ivy :ensure t :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs :ensure t :commands lsp-treemacs-errors-list)
+
+;; optionally if you want to use debugger
+(use-package dap-mode :ensure t)
+;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+
+;; optional if you want which-key integration
+(use-package which-key
+  :ensure t 
+  :config
+  (which-key-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python environment ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; pyvenv
+(use-package pyvenv
+  :ensure t)
 (setenv "WORKON_HOME" "/home/jtlaune/miniconda3/envs")
 (pyvenv-workon "science")
-
-;; for some reason, elpy.el doesn't explicity require hideshow fixed
-;; by requiring hideshow before downloading/bytecompiling elpy.  see
-;; issue here: https://github.com/jorgenschaefer/elpy/issues/1824
-(add-hook 'python-mode-hook 'hs-minor-mode)
-(use-package elpy
-  :ensure t
-  :config (progn (elpy-enable) (elpy-folding-hide-leafs)))
-(define-key elpy-mode-map (kbd "M-f t") 'elpy-folding-toggle-at-point)
-(define-key elpy-mode-map (kbd "M-f l") 'elpy-folding-hide-leafs)
-(define-key elpy-mode-map (kbd "M-f a") 'hs-hide-all)
-(define-key elpy-mode-map (kbd "M-f s") 'hs-show-all)
-(define-key elpy-mode-map (kbd "M-f n") 'flycheck-next-error)
-(global-set-key (kbd "M-o") 'ace-window)
-(setq elpy-rpc-virtualenv-path 'current)
-(setq elpy-rpc-backend "jedi")
-;(defun my-elpy-hook ()
-;  (progn
-;  (hs-minor-mode)
-;  (hs-hide-level 1)))
-;(add-hook 'elpy-mode-hook #'my-elpy-hook)
 
 ;; flycheck
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
-
-;; Use flycheck instead of flymake
-(when (load "flycheck" t t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
 ;; jupyter
 (use-package jupyter
@@ -355,7 +385,16 @@ comment box."
    (jupyter . t)
    (gnuplot . t)))
 
+(use-package lsp-jedi
+  :ensure t
+  :config
+  (with-eval-after-load "lsp-mode"
+    (add-to-list 'lsp-disabled-clients 'pyls)
+    (add-to-list 'lsp-enabled-clients 'jedi)))
 
+(setq lsp-jedi-workspace-extra-paths
+  (vconcat lsp-jedi-workspace-extra-paths
+           ["/home/jtlaune/miniconda3/envs/science/lib/python3.9/site-packages"]))
 ;; dnd
 ;; THIS PACKAGE DOES NOT WORK. DO NOT WASTE ANY MORE TIME ON THIS STUPID PIECE OF SHIT.
 ;(require 'ox-dnd)
@@ -385,7 +424,7 @@ comment box."
 (add-hook 'org-mode-hook 'literate-calc-minor-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 4.))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.))
 (add-to-list 'org-latex-packages-alist '("" "amsmath" t))
 (add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)
@@ -631,7 +670,7 @@ comment box."
 ;  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 ;        doom-themes-enable-italic t) ; if nil, italics is universally disabled
 ;  ;(load-theme 'doom-rouge t)
-;  (load-theme 'doom-flatwhite t)
+;  (load-theme 'doom-one t)
 ;
 ;  ;; Enable flashing mode-line on errors
 ;  (doom-themes-visual-bell-config)
@@ -646,6 +685,16 @@ comment box."
 ;;;;;;;;;;;;
 ;; docker ;;
 ;;;;;;;;;;;;
+;
+;(use-package solaire-mode
+;  :ensure t)
+;(solaire-global-mode +1)
+
+(use-package catppuccin-theme
+  :ensure t
+  :config
+  (setq catppuccin-height-title1 1.5))
+(load-theme 'catppuccin)
 
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
@@ -791,3 +840,8 @@ comment box."
 ;;;;;;;;;;;;;;;
 (use-package literate-calc-mode
   :ensure t)
+
+;;;;;;;;;
+;; C++ ;;
+;;;;;;;;;
+(add-to-list 'lsp-enabled-clients 'clangd)

@@ -297,26 +297,6 @@ comment box."
 ;        ("%paragraph" 5)))
 ;(define-key outline-minor-mode-map (kbd "<C-tab>") 'outline-cycle)
 
-;; powerline
-(use-package powerline
-  :ensure t
-  :config
-  (powerline-default-theme))
-
-
-;; for some reason spaceline is throwing startup errors even
-;; after reinstalling
-;; spaceline
-(use-package spaceline
-  :ensure t)
-(spaceline-emacs-theme)
-;(require spaceline-config)
-;(use-package spaceline-config
-;  :ensure spaceline
-;  :config
-;  (spaceline-helm-mode 1)
-;  (spaceline-spacemacs-theme))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python environment ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
@@ -371,6 +351,7 @@ comment box."
  '((emacs-lisp . t)
    (latex . t)
    (python . t)
+   (calc . t)
    (jupyter . t)
    (gnuplot . t)))
 
@@ -401,6 +382,7 @@ comment box."
 (add-hook 'org-mode-hook 'evil-org-mode)
 (add-hook 'org-mode-hook 'linum-mode)
 (add-hook 'org-mode-hook 'hl-line-mode)
+(add-hook 'org-mode-hook 'literate-calc-minor-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 4.))
@@ -615,6 +597,22 @@ comment box."
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
+;;;;;;;;;;;;;
+;; theming ;;
+;;;;;;;;;;;;;
+
+;; spaceline
+(use-package spaceline
+  :ensure t)
+(spaceline-emacs-theme)
+
+;; Add some visual flair to the modeline enhancements
+(use-package spaceline-all-the-icons
+  :ensure t
+  :after spaceline
+  :config (spaceline-all-the-icons-theme)
+  (spaceline-all-the-icons--setup-neotree))
+
 (use-package rainbow-mode
   :ensure t)
 
@@ -626,24 +624,28 @@ comment box."
 ;  :ensure t)
 ;(load-theme 'junio t)
 
-(use-package doom-themes
-  :ensure t
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;(load-theme 'doom-rouge t)
-  (load-theme 'doom-flatwhite t)
+;(use-package doom-themes
+;  :ensure t
+;  :config
+;  ;; Global settings (defaults)
+;  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+;        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+;  ;(load-theme 'doom-rouge t)
+;  (load-theme 'doom-flatwhite t)
+;
+;  ;; Enable flashing mode-line on errors
+;  (doom-themes-visual-bell-config)
+;  ;; Enable custom neotree theme (all-the-icons must be installed!)
+;  (doom-themes-neotree-config)
+;  ;; or for treemacs users
+;  ;(setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+;  ;(doom-themes-treemacs-config)
+;  ;; Corrects (and improves) org-mode's native fontification.
+;  (doom-themes-org-config))
 
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Enable custom neotree theme (all-the-icons must be installed!)
-  (doom-themes-neotree-config)
-  ;; or for treemacs users
-  ;(setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-  ;(doom-themes-treemacs-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+;;;;;;;;;;;;
+;; docker ;;
+;;;;;;;;;;;;
 
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
@@ -783,3 +785,9 @@ comment box."
 ;;;;;;;;;;;;;
 ;; Example configuration for Consult at
 ;; https://github.com/minad/consult
+
+;;;;;;;;;;;;;;;
+;; calc mode ;;
+;;;;;;;;;;;;;;;
+(use-package literate-calc-mode
+  :ensure t)

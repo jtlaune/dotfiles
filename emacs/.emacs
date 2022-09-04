@@ -391,7 +391,7 @@ comment box."
 (add-hook 'org-mode-hook 'literate-calc-minor-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 4.))
 (add-to-list 'org-latex-packages-alist '("" "amsmath" t))
 (add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)
@@ -629,7 +629,7 @@ comment box."
       '((":PROPERTIES:" . ((lambda (tag) (svg-tag-make "PROPERTIES"))))))
 (setq svg-tag-tags
       '(("#+RESULTS:" . ((lambda (tag) (svg-tag-make "RESULTS"))))))
-(global-svg-tag-mode)
+;(global-svg-tag-mode)
 
 ;;;;;;;;;;;;
 ;; docker ;;

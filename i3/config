@@ -213,7 +213,7 @@ exec --no-startup-id snixembed
 exec --no-startup-id iwgtk -i
 exec --no-startup-id zoom
 exec --no-startup-id picom
-exec --no-startup-id steam -silent
+#exec --no-startup-id steam -silent
 exec --no-startup-id dropbox start
 exec --no-startup-id redshift-gtk
 exec --no-startup-id emacs --daemon

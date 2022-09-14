@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: latex equation star
+# key: <leq
+# --
+\begin{equation*}
+  $0
+\end{equation*}

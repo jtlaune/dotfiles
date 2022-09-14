@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: latex wedge
+# key: <lw
+# --
+\left<$0,\right>

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: latex align star
+# key: <la
+# --
+\begin{align*}
+  $0
+\end{align*}

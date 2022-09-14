@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: latex partial derivative
+# key: <lpd
+# --
+\frac{\partial $2}{\partial $1}$0

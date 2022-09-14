@@ -16,9 +16,9 @@
 
 
 ;; have to use default-frame-alist for daemon emacs
-(add-to-list 'default-frame-alist '(font . "Iosevka Term Slab 12"))
-(set-face-attribute 'default nil :family "Iosevka Term Slab 12")
-(set-face-attribute 'fixed-pitch nil :family "Iosevka Term Slab 12")
+(add-to-list 'default-frame-alist '(font . "Iosevka Term Slab 14"))
+(set-face-attribute 'default nil :family "Iosevka Term Slab 14")
+(set-face-attribute 'fixed-pitch nil :family "Iosevka Term Slab 14")
 (set-face-attribute 'variable-pitch nil :family "IBM Plex Serif")
 (use-package mixed-pitch
   :ensure t
@@ -315,6 +315,12 @@ comment box."
   :config
   (which-key-mode))
 
+(lsp-register-client
+    (make-lsp-client :new-connection (lsp-tramp-connection "clangd")
+                     :major-modes '(c++-mode)
+                     :remote? t
+                     :server-id 'clangd-remote))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Python environment ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
@@ -388,10 +394,10 @@ comment box."
 (add-hook 'org-mode-hook 'evil-org-mode)
 (add-hook 'org-mode-hook 'linum-mode)
 (add-hook 'org-mode-hook 'hl-line-mode)
-(add-hook 'org-mode-hook 'literate-calc-minor-mode)
+;(add-hook 'org-mode-hook 'literate-calc-minor-mode)
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (setq org-startup-with-inline-images t)
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 4.))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.5))
 (add-to-list 'org-latex-packages-alist '("" "amsmath" t))
 (add-to-list 'org-latex-packages-alist '("" "tensor" t))
 (setq org-latex-prefer-user-labels t)
@@ -783,3 +789,5 @@ comment box."
 ;; C++ ;;
 ;;;;;;;;;
 (add-to-list 'lsp-enabled-clients 'clangd)
+(add-to-list 'tramp-remote-path "/home/astrosun/jtlaune/opt/llvm/bin")
+(add-to-list 'lsp-enabled-clients 'clangd-remote)

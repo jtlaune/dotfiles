@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh -L localhost:8888:localhost:9999 jtlaune@exo4.astro.cornell.edu

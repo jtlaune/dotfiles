@@ -789,5 +789,5 @@ comment box."
 ;; C++ ;;
 ;;;;;;;;;
 (add-to-list 'lsp-enabled-clients 'clangd)
-(add-to-list 'tramp-remote-path "/home/astrosun/jtlaune/opt/llvm/bin")
+(add-to-list 'tramp-remote-path "/home/astrosun/jtlaune/opt/llvm/bin/")
 (add-to-list 'lsp-enabled-clients 'clangd-remote)
